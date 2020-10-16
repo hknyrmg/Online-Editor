@@ -1,4 +1,3 @@
-/* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
   "compileOnSave": false,
   "compilerOptions": {
@@ -15,6 +14,25 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "@onlineide/components": [
+        "dist/onlineide/components/onlineide-components",
+        "dist/onlineide/components"
+      ],
+      "@onlineide/layout": [
+        "dist/onlineide/layout/onlineide-layout",
+        "dist/onlineide/layout"
+      ],
+      "@onlineide/core": [
+        "dist/onlineide/core/onlineide-core",
+        "dist/onlineide/core"
+      ],
+      "@onlineide/common": [
+        "dist/onlineide/common/onlineide-common",
+        "dist/onlineide/common"
+      ]
+
+    }
   }
 }

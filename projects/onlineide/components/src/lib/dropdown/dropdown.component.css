@@ -1,0 +1,14 @@
+
+
+select.languages-select {
+    cursor: pointer;
+}
+
+select.languages-select > option {
+    display: block;
+    background: ghostwhite;
+}
+
+select.languages-select:focus > option:checked { 
+    font-weight: bold;
+}
