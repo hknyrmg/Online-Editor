@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 
 
 import { IdeComponentsModule } from '@onlineide/components';
-import { IdeLayoutModule } from '@onlineide/layout';
 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -11,10 +10,11 @@ import { RouterModule } from '@angular/router';
 import { MainPageComponent } from './main-page/main-page.component';
 import { HttpClientModule } from '@angular/common/http';
 
-// anguşar material modules
+// angular material modules
 
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
+import { AppRoutingModule } from '../app-routing.module';
+import { IdeLayoutModule } from '@onlineide/layout';
 
 @NgModule({
   declarations: [
@@ -26,12 +26,9 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     CommonModule,
     FormsModule,
     IdeComponentsModule,
-    IdeLayoutModule,
     HttpClientModule,
-    MatButtonToggleModule
-    
-    
-    
+    AppRoutingModule, 
+    IdeLayoutModule
   ],
   providers: [],
   exports: [MainPageComponent]

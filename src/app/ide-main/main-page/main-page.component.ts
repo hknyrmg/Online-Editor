@@ -28,19 +28,23 @@ const LANG = 'ace/mode/javascript';
 })
 export class MainPageComponent implements OnInit {
   @ViewChild('codeEditor2', { static: true }) codeEditorElmRef: ElementRef;
+ 
+
   private codeEditor: ace.Ace.Editor;
   private editorBeautify;
 
   constructor(private _cdRef: ChangeDetectorRef,
-    private _proxyService: ProxyManager, private http: HttpClient) { }
+    private _proxyService: ProxyManager, private http: HttpClient) {
+      
+     }
 
-    textAReaModel: string;
+  textAReaModel: string;
 
   // Language List variables
   public languageList: Language[];
   public languageModelList: DropdownModel[];
   public dropDownTitleVar = "Languages";
-  selectedValue: any = "63";
+  selectedValue: any = "1";
 
   // Theme variables
   public buttonModelList: ButtonToggleModel[] = [
@@ -51,7 +55,7 @@ export class MainPageComponent implements OnInit {
   public selectedButtonValue = Themes.Dark.toString();
 
   ngOnInit() {
-    
+
     ace.require('ace/ext/language_tools');
     const element = this.codeEditorElmRef.nativeElement;
     const editorOptions = this.getEditorOptions();
@@ -74,7 +78,8 @@ export class MainPageComponent implements OnInit {
     };
 
     const extraEditorOptions = {
-      enableLiveAutocompletion: true
+      enableLiveAutocompletion: true,
+      enableSnippets: true
     };
     const margedOptions = Object.assign(basicEditorOptions, extraEditorOptions);
     return margedOptions;
@@ -95,15 +100,22 @@ export class MainPageComponent implements OnInit {
   clearCode() {
     this.codeEditor.setValue(undefined);
   }
+  // getLanguageList() {
+  //   this._proxyService.get(undefined,
+  //     ApiCallsMainPage.MainEditorPageLanguage.Actions.Languages).subscribe((data: any) => {
+  //       console.log(data);
+  //       this.languageList = data;
+  //       this._mapDropLanguages(this.languageList);
+  //     }, (err: any) => {
+  //       console.log(err);
+  //     })
+
+  // }
   getLanguageList() {
-    this._proxyService.get(undefined,
-      ApiCallsMainPage.MainEditorPageLanguage.Actions.Languages).subscribe((data: any) => {
-        console.log(data);
-        this.languageList = data;
-        this._mapDropLanguages(this.languageList);
-      }, (err: any) => {
-        console.log(err);
-      })
+    this.languageList = [{ id: 1, name: 'JavaScript' },
+    { id: 2, name: 'C#' },
+    { id: 3, name: 'Java' }];
+  this._mapDropLanguages(this.languageList);
 
   }
   private _mapDropLanguages(languageList: Language[]) {
@@ -143,6 +155,8 @@ export class MainPageComponent implements OnInit {
         break;
     }
   }
+
+
 
 
 }

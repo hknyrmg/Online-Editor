@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'ide-main-header',
@@ -6,10 +6,16 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./main-header.component.css']
 })
 export class MainHeaderComponent implements OnInit {
-@Input() headerTitle: string = "Obss Online Ide"
+@Input() headerTitle: string = "OBSS Online IDE"
+@Output() menuButtonClicked = new EventEmitter<any>();
+
+
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  menuClicked(value){
+this.menuButtonClicked.emit(value);
+  }
 }
