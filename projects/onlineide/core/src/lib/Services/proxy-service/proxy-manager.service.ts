@@ -9,18 +9,18 @@ import { map, finalize, retry, tap, catchError } from 'rxjs/operators';
 })
 export class ProxyManager {
   private _baseUri: string;
-  private _reqheaders = new HttpHeaders({'No-Auth':'True', 'Content-Type': 'application/json'});
+  private _reqheaders = new HttpHeaders({ 'No-Auth': 'True', 'Content-Type': 'application/json' });
 
   constructor(private _httpClient: HttpClient,
     @Inject('baseApiUrl') baseApiUrl: string) {
     this._baseUri = baseApiUrl;
   }
 
-  public post(controllerName: string, actionName: string, body: any, contentType?: ProxyContentTypes): Observable<any> {
+  public post(actionName: string, body: any, contentType?: ProxyContentTypes): Observable<any> {
     // this._showSpinner(ProxyCallingTypes.Post);
     let httpRequestBody: any = contentType == ProxyContentTypes.UrlEncoded ? this._serializeObj(body) : body;
 
-    let uri: string = `${this._baseUri}/${controllerName}/${actionName}`;
+    let uri: string = `${this._baseUri}/${actionName}`;
 
     let headerOptions: any = { headers: this._getHeader(contentType) };
 
@@ -40,20 +40,20 @@ export class ProxyManager {
     //     // hideSpinner
     //   })
     // )
-    return this._httpClient.post(uri, httpRequestBody, {headers: this._reqheaders});
-    
+    return this._httpClient.post(uri, httpRequestBody, { headers: this._reqheaders });
+
   }
-  public  get(controllerName: string, actionName: string): Observable<any> {
+  public get(controllerName: string, actionName: string): Observable<any> {
 
     // this._showSpinner(ProxyCallingTypes.Post);
 
     // let uri: string = `${this._baseUri}/${controllerName}/${actionName}`;
-// TODO: HAKAN api endpointler gelince duzelecek
-let uri: string = `${this._baseUri}`;
- uri = controllerName ? uri + `/${controllerName}/${actionName}` : uri +`/${actionName}` ;
-    
-    return  this._httpClient.get(uri,  {headers: this._reqheaders});
-    
+    // TODO: HAKAN api endpointler gelince duzelecek
+    let uri: string = `${this._baseUri}`;
+    uri = controllerName ? uri + `/${controllerName}/${actionName}` : uri + `/${actionName}`;
+
+    return this._httpClient.get(uri, { headers: this._reqheaders });
+
   }
 
   private _handleError(error: HttpErrorResponse) {

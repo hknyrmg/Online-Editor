@@ -14,20 +14,15 @@ div.label-box {
     border-bottom-right-radius: .5rem!important;
 }
 
-.btn-beautify {
-    color: #ffffff;
-    background-color: #e83e8c;
+
+
+.mb-50{
+    margin-bottom: 50px;
 }
 
-/* select.languages-select {
-    cursor: pointer;
-}
 
-select.languages-select > option {
-    display: block;
-    background: ghostwhite;
-}
-
-select.languages-select:focus > option:checked { 
-    font-weight: bold;
-} */
+@media only screen and (max-width: 500px) {
+    .max-w-to {
+      max-width: fit-content !important;
+    }
+  }

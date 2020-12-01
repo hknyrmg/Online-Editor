@@ -15,6 +15,8 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from '../app-routing.module';
 import { IdeLayoutModule } from '@onlineide/layout';
+import { MatButtonModule } from '@angular/material/button';
+import {MatDialogModule} from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,10 @@ import { IdeLayoutModule } from '@onlineide/layout';
     IdeComponentsModule,
     HttpClientModule,
     AppRoutingModule, 
-    IdeLayoutModule
+    IdeLayoutModule,
+    MatButtonModule,
+    MatDialogModule
+
   ],
   providers: [],
   exports: [MainPageComponent]

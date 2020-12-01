@@ -1,0 +1,59 @@
+<mat-card>{{currentQuestion.header}}
+
+    <mat-card-title>
+        {{currentQuestion.description}}
+    </mat-card-title>
+    <mat-card-subtitle *ngIf="currentQuestion.problem_details">
+        {{currentQuestion.problem_details}}
+
+    </mat-card-subtitle>
+
+    <!-- <mat-card-content>
+    Copyright 2020 Google LLC. All Rights Reserved.
+        Use of this source code is governed by an MIT-style license that
+        can be found in the LICENSE
+          </mat-card-content> -->
+
+    <!-- 
+    <mat-card-actions>
+        <section>
+            <div style="margin-bottom: 0px;" class="row mb-4 justify-content-center mx-4">
+                <div class="col-4 col-lg-2 col-md-3 col-sm-4 w-75">
+                    <button type="button" class="btn btn-dark btn-sm btn-block px-4 mx-2" >
+                        Run
+                    </button>
+                </div>
+                <div class="col-4 col-lg-2 col-md-3 col-sm-4 w-75">
+                    <button type="button" class="btn btn-primary btn-sm btn-block px-4 mx-2" >
+                        Clear
+                    </button>
+                </div>
+                <div class="col-4 col-lg-2 col-md-3 col-sm-4 w-75">
+                    <button type="button" class="btn btn-success btn-sm btn-block px-4 mx-2">
+                        Beautify
+                    </button>
+                </div>
+            </div>
+        </section>
+    </mat-card-actions> -->
+    <mat-card-footer>
+        {{currentQuestionNumber}} of {{codeProblemList.length}} </mat-card-footer>
+</mat-card>
+<div class="row mb-4 justify-content-center mx-4">
+    <div class="col-4 col-lg-2 col-md-3 col-sm-4 col-xs-4 w-75">
+   
+        <button mat-stroked-button (click)="prevClick()" 
+        [disabled]="currentQuestionNumber === 1">Prev</button>
+    </div>
+    <div class="col-4 col-lg-2 col-md-3 col-sm-4 col-xs-4 w-75">
+ 
+        <button mat-stroked-button color="primary" (click)="sendClick()">Send</button>
+
+    </div>
+    <div class="col-4 col-lg-2 col-md-3 col-sm-4 col-xs-4 w-75">
+     
+        <button mat-stroked-button (click)="nextClick()" 
+        [disabled]="currentQuestionNumber === codeProblemList.length">Next</button>
+
+    </div>
+</div>
