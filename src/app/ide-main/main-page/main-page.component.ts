@@ -248,8 +248,9 @@ export class MainPageComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(this.currentAnswerList);
-      this.sendAnswers();
+      if(result){
+        this.sendAnswers();
+      }
     });
   }
 
