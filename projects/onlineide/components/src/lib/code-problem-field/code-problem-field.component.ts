@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { CodeProblem } from '../models/CodeProblemModels/CodeProblem';
 
 @Component({
@@ -11,6 +11,7 @@ export class CodeProblemFieldComponent implements OnInit {
   @Output() nextClickEvent = new EventEmitter<any>();
   @Output() prevClickEvent = new EventEmitter<any>();
   @Output() sendClickEvent = new EventEmitter<any>();
+  @Output() questionCopiedEvent = new EventEmitter<any>();
 
   public currentQuestion: CodeProblem;
   public currentQuestionNumber: number = 1;
@@ -26,19 +27,28 @@ export class CodeProblemFieldComponent implements OnInit {
     this.currentQuestion = this.codeProblemList[0];
   }
 
-  prevClick(){
+  prevClick() {
     this.currentQuestionNumber -= 1;
-    this.currentQuestion = this.codeProblemList[this.currentQuestionNumber -1];
+    this.currentQuestion = this.codeProblemList[this.currentQuestionNumber - 1];
     this.prevClickEvent.emit();
   }
-  nextClick(){
+  nextClick() {
     this.currentQuestionNumber += 1;
-    this.currentQuestion = this.codeProblemList[this.currentQuestionNumber -1];
+    this.currentQuestion = this.codeProblemList[this.currentQuestionNumber - 1];
     this.nextClickEvent.emit();
 
   }
-  sendClick(){
+  sendClick() {
     this.sendClickEvent.emit();
+
+  }
+
+  @HostListener('copy', ['$event'])
+  onCopy(e) {
+    if (e.path[0].nodeName === 'MAT-CARD-TITLE') {
+      this.questionCopiedEvent.emit(this.currentQuestionNumber);
+
+    }
 
   }
 }

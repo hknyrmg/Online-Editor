@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ChangeDetectorRef, ViewChild, HostListener } from '@angular/core';
 
 import * as ace from 'ace-builds';
 import 'ace-builds/src-noconflict/mode-javascript';
@@ -41,9 +41,22 @@ export class MainPageComponent implements OnInit {
   constructor(private _cdRef: ChangeDetectorRef,
     private _proxyService: ProxyManager, private http: HttpClient,
     public dialog: MatDialog) {
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          //do whatever you want
+          console.log("Hidden");
 
+          this._updatePageLeaveCount();
+
+        }
+        else {
+          //do whatever you want
+          console.log("SHOWN");
+        }
+  });
 
   }
+
 
 
 
@@ -77,6 +90,7 @@ export class MainPageComponent implements OnInit {
     this.editorBeautify = ace.require('ace/ext/beautify');
     this.getLanguageList();
 
+    this._cdRef.detectChanges();
     this.getRandomQuestion();
 
 
@@ -113,7 +127,8 @@ export class MainPageComponent implements OnInit {
     return code;
   }
   private _setCode(code: string) {
-    this.codeEditor.setValue(code);
+    let value = code ? code : "";
+    this.codeEditor.setValue(value);
   }
   runCode() {
     this.textAReaModel = this._getCode();
@@ -139,6 +154,8 @@ export class MainPageComponent implements OnInit {
         this.currentProblemList = data;
         this._setSampleCode(this.currentProblemList[0]);
         this._setCurrentAnswerList();
+        this._updateQuestionShown(0);
+
       }, (err: any) => {
         console.log(err);
       });
@@ -146,6 +163,8 @@ export class MainPageComponent implements OnInit {
     // this.currentProblemList = this.dummyDataList;
     // this._setSampleCode(this.currentProblemList[0]);
     // this._setCurrentAnswerList();
+    // this._updateQuestionShown(0);
+
   }
 
   private _setCurrentAnswerList() {
@@ -210,11 +229,13 @@ export class MainPageComponent implements OnInit {
   }
 
   private _saveAnswer(index: number) {
-    this.currentAnswerList[index].coding_problem_answer = this._getCode();
+    let answer = this._getCode() ? this._getCode() : "";
+    this.currentAnswerList[index].coding_problem_answer = answer;
   }
 
   nextClick() {
     this._saveAnswer(this.codeProblemComp.currentQuestionNumber - 2);
+    this._updateQuestionShown(this.codeProblemComp.currentQuestionNumber - 1);
 
     if (this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].coding_problem_answer === "") {
       this._setSampleCode(this.codeProblemComp.currentQuestion);
@@ -280,5 +301,28 @@ export class MainPageComponent implements OnInit {
   }
 
  
+  @HostListener('paste', ['$event'])
+  onPaste(e: ClipboardEvent) {
+
+    this._updatePasteCount();
+  }
+
+ 
+ 
+private _updatePageLeaveCount(){
+ this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].page_leave_count += 1;
+}
+private _updatePasteCount(){
+  this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].ctrl_v_count += 1;
+ }
+
+private _updateQuestionShown(index: number){
+  this.currentAnswerList[index].is_question_shown = true;
+}
+public questionCopied(event){
+  console.log(event);
+  this.currentAnswerList[event -1].is_question_copied = true;
+
+}
 }
 
