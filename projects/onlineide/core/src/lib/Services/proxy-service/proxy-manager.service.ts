@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { ProxyContentTypes } from './enum/proxy-content-types.enum';
 import { Observable, throwError } from 'rxjs';
 import { map, finalize, retry, tap, catchError } from 'rxjs/operators';
+import { LoaderService } from '../loader-service/loader.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +13,14 @@ export class ProxyManager {
   private _reqheaders = new HttpHeaders({ 'No-Auth': 'True', 'Content-Type': 'application/json' });
 
   constructor(private _httpClient: HttpClient,
-    @Inject('baseApiUrl') baseApiUrl: string) {
+    @Inject('baseApiUrl') baseApiUrl: string,
+    private _loaderService: LoaderService
+    ) {
     this._baseUri = baseApiUrl;
   }
 
   public post(actionName: string, body: any, contentType?: ProxyContentTypes): Observable<any> {
-    // this._showSpinner(ProxyCallingTypes.Post);
+    this._loaderService.display(true);
     let httpRequestBody: any = contentType == ProxyContentTypes.UrlEncoded ? this._serializeObj(body) : body;
 
     let uri: string = `${this._baseUri}/${actionName}`;
@@ -27,32 +30,46 @@ export class ProxyManager {
     if (contentType === ProxyContentTypes.Stream) {
       headerOptions.responseType = 'arraybuffer' as 'arraybuffer';
     }
-    // return this._httpClient.post(uri, httpRequestBody, headerOptions).pipe(
-    //   map((data: any) => {
-    //     console.log(data);
-    //     if (data)
-    //       return data;
-    //   }
+    return this._httpClient.post(uri, httpRequestBody, { headers: this._reqheaders }).pipe(
+      map((data: any) => {
+        console.log(data);
+        if (data)
+          return data;
+      }
 
-    //   ),
-    //   catchError((err: any) => throwError(err)),
-    //   finalize(() => {
-    //     // hideSpinner
-    //   })
-    // )
-    return this._httpClient.post(uri, httpRequestBody, { headers: this._reqheaders });
+      ),
+      catchError((err: any) => throwError(err)),
+      finalize(() => {
+        this._loaderService.display(false);
+      })
+    )
+    // return this._httpClient.post(uri, httpRequestBody, { headers: this._reqheaders });
 
   }
   public get(controllerName: string, actionName: string): Observable<any> {
 
-    // this._showSpinner(ProxyCallingTypes.Post);
+    this._loaderService.display(true);
 
     // let uri: string = `${this._baseUri}/${controllerName}/${actionName}`;
     // TODO: HAKAN api endpointler gelince duzelecek
     let uri: string = `${this._baseUri}`;
     uri = controllerName ? uri + `/${controllerName}/${actionName}` : uri + `/${actionName}`;
 
-    return this._httpClient.get(uri, { headers: this._reqheaders });
+   // return this._httpClient.get(uri, { headers: this._reqheaders });
+
+    return this._httpClient.get(uri,  { headers: this._reqheaders }).pipe(
+      map((data: any) => {
+        console.log(data);
+        if (data)
+          return data;
+      }
+
+      ),
+      catchError((err: any) => throwError(err)),
+      finalize(() => {
+        this._loaderService.display(false);
+      })
+    )
 
   }
 

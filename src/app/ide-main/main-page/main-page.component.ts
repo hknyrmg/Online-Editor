@@ -19,6 +19,7 @@ import { Themes } from 'projects/onlineide/common/src/public-api';
 import { AceEditorConstants } from 'src/constants/AceEditorConstants/ace-constants.model';
 import { CodeProblem, UserAnswer } from 'projects/onlineide/components/src/public-api';
 import { MatDialog } from '@angular/material/dialog';
+import { LoaderService } from 'projects/onlineide/core/src/lib/Services/loader-service/loader.service';
 
 //const THEME = 'ace/theme/monokai';
 const LANG = 'ace/mode/javascript';
@@ -32,6 +33,8 @@ export class MainPageComponent implements OnInit {
   @ViewChild('codeProblemComp')
   codeProblemComp: CodeProblemFieldComponent;
 
+
+
   public currentProblemList: CodeProblem[];
   public currentAnswerList: UserAnswer[] = [];
 
@@ -39,7 +42,7 @@ export class MainPageComponent implements OnInit {
   private editorBeautify;
 
   constructor(private _cdRef: ChangeDetectorRef,
-    private _proxyService: ProxyManager, private http: HttpClient,
+    private _proxyService: ProxyManager,
     public dialog: MatDialog) {
       document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
@@ -276,15 +279,21 @@ export class MainPageComponent implements OnInit {
   }
 
   sendAnswers(){
+
+
+
     this._proxyService.post('compile-test',
       this.currentAnswerList
       ).subscribe((data: any) => {
+
        console.log(data);
        this.openResultDialog("Congrulations! Your answers has been sent.");
       }, (err: any) => {
+
         console.log(err);
         let message = err.message ? err.message : "An error occurred!";
         this.openResultDialog(message);
+      }, ()=>{
       }); 
   }
   openResultDialog(message: string): void {

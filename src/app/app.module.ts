@@ -10,6 +10,7 @@ import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from 'src/environments/environment';
+import { CoreModule } from '@onlineide/core';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { environment } from 'src/environments/environment';
     IdeMainModule,
     RouterModule,
     HttpClientModule,
-    BrowserAnimationsModule 
+    BrowserAnimationsModule ,
+    CoreModule
     
   ],
   providers: [ {
