@@ -1,10 +1,10 @@
-<mat-card>{{currentQuestion.header}}
+<mat-card>{{currentQuestion.problem.header}}
 
     <mat-card-title>
-        {{currentQuestion.description}}
+        {{currentQuestion.problem.description}}
     </mat-card-title>
-    <mat-card-subtitle *ngIf="currentQuestion.problem_details">
-        {{currentQuestion.problem_details}}
+    <mat-card-subtitle *ngIf="currentDetail.problem_details">
+        {{currentDetail.problem_details}}
 
     </mat-card-subtitle>
 

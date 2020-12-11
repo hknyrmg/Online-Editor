@@ -1,4 +1,5 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { LanguageSpecificProblemDetail, Problem, Problems } from '@onlineide/common';
 import { CodeProblem } from '../models/CodeProblemModels/CodeProblem';
 
 @Component({
@@ -7,13 +8,19 @@ import { CodeProblem } from '../models/CodeProblemModels/CodeProblem';
   styleUrls: ['./code-problem-field.component.css']
 })
 export class CodeProblemFieldComponent implements OnInit {
-  @Input() codeProblemList: CodeProblem[];
+  // @Input() codeProblemList: CodeProblem[];
+  @Input() codeProblemList: Problems[];
+  public currentQuestion: Problems;
+  @Input() currentDetail: LanguageSpecificProblemDetail;
+  // @Input() selectedLanguageId: number;
+
   @Output() nextClickEvent = new EventEmitter<any>();
   @Output() prevClickEvent = new EventEmitter<any>();
   @Output() sendClickEvent = new EventEmitter<any>();
+  @Output() runClickEvent = new EventEmitter<any>();
   @Output() questionCopiedEvent = new EventEmitter<any>();
 
-  public currentQuestion: CodeProblem;
+  
   public currentQuestionNumber: number = 1;
 
   constructor() { }
@@ -40,6 +47,11 @@ export class CodeProblemFieldComponent implements OnInit {
   }
   sendClick() {
     this.sendClickEvent.emit();
+
+  }
+
+  runClick(){
+    this.runClickEvent.emit();
 
   }
 

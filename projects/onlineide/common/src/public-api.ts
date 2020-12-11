@@ -4,5 +4,12 @@
 
 export * from './lib/common.module';
 
-export {Language} from './lib/models/language.model'
-export {Themes} from './lib/enums/supported-themes.enum';
+export * from './lib/models/coding-problem-models/LanguageSpecificProblemDetail';
+export * from './lib/models/coding-problem-models/Problem';
+export * from './lib/models/coding-problem-models/Problems';
+
+export * from './lib/models/coding-problem-models/CompilerTest.model';
+
+
+export {Language} from './lib/models/language.model';
+export * from './lib/enums/supported-themes.enum';

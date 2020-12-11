@@ -1,28 +1,25 @@
-<ide-main-page>
+<ide-main-page (toggleChangeEvent)="modeToggleChange($event)">
     <form #form="ngForm" (ngSubmit)="form.form.valid && runCode()" novalidate>
 
 
 
         <div class="container h-100 mt-4 mb-50">
-
-
             <!-- languages & theme -->
             <div class="row mb-4 justify-content-center mx-4">
                 <!-- languages select -->
                 <div class="col-auto col-lg-3 col-md-4 col-sm-6">
-                    <ide-dropdown [selectedValue]="selectedValue" [dropDownTitle]="dropDownTitleVar"
+                    <ide-dropdown [selectedValue]="selectedLangId" [dropDownTitle]="dropDownTitleVar"
                         [dropDataList]="languageModelList" (dropChangedEvent)="dropChanged($event)">
-
                     </ide-dropdown>
                 </div>
 
                 <!-- theme radio buttons -->
-                <div class="col-auto col-lg-3 col-md-4 col-sm-6 max-w-to">
-                    <ide-button-toggle [selectedValue]="selectedButtonValue" [buttonToggleList]="buttonModelList"
-                        (buttonChangedEvent)="buttonChanged($event)">
-                    </ide-button-toggle>
+                <!-- <div class="col-auto col-lg-3 col-md-4 col-sm-6 max-w-to">
+                            <ide-button-toggle [selectedValue]="selectedButtonValue"
+                                [buttonToggleList]="buttonModelList" (buttonChangedEvent)="buttonChanged($event)">
+                            </ide-button-toggle>
 
-                </div>
+                        </div> -->
             </div>
 
             <!-- the question -->
@@ -30,8 +27,9 @@
                 <div class="col-auto col-lg-10 col-md-10 col-sm-10">
 
                     <ide-code-problem-field #codeProblemComp (nextClickEvent)="nextClick()"
-                        (prevClickEvent)="prevClick()" (sendClickEvent)="sendClick()"
-                        (questionCopiedEvent)="questionCopied($event)" [codeProblemList]="currentProblemList">
+                        (prevClickEvent)="prevClick()" [currentDetail]="currentDetail" (sendClickEvent)="sendClick()"
+                        (runClickEvent)="runClick()" (questionCopiedEvent)="questionCopied($event)"
+                        [codeProblemList]="currentProblemList">
                     </ide-code-problem-field>
 
                 </div>
@@ -49,31 +47,22 @@
             <div class="row mb-4 justify-content-center mx-4">
                 <div class="col-4 col-lg-2 col-md-3 col-sm-4 col-xs-4 w-75">
 
-                    <button mat-raised-button color="primary" (click)="clearCode()">Clear</button>
+                    <button mat-raised-button (click)="clearCode()">Clear</button>
 
                 </div>
                 <div class="col-4 col-lg-2 col-md-3 col-sm-4 col-xs-4 w-75">
+                    <button mat-stroked-button color="primary" (click)="testCode()">Run</button>
+                </div>
+                <div class="col-4 col-lg-2 col-md-3 col-sm-4 col-xs-4 w-75">
 
-                    <button mat-raised-button color="accent" (click)="beautifyContent()">Beautify</button>
+                    <button mat-raised-button (click)="beautifyContent()">Beautify</button>
 
                 </div>
 
             </div>
 
 
-
-
-
-
-
-            <!-- output box -->
-            <!-- <div class="row mt-4">
-                <div class="col">
-                    <div class="label-box border"><span class="mx-4 font-weight-light">Output</span></div>
-                    <textarea class="form-control output" [(ngModel)]="textAReaModel" name="outputName" rows="6"
-                        disabled="true" aria-label="output-textarea"></textarea>
-                </div>
-            </div> -->
         </div>
+
     </form>
 </ide-main-page>

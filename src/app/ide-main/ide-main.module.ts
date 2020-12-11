@@ -16,12 +16,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from '../app-routing.module';
 import { IdeLayoutModule } from '@onlineide/layout';
 import { MatButtonModule } from '@angular/material/button';
-import {MatDialogModule} from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
-    
-  MainPageComponent],
+
+    MainPageComponent],
   imports: [
     BrowserModule,
     RouterModule,
@@ -29,10 +30,11 @@ import {MatDialogModule} from '@angular/material/dialog';
     FormsModule,
     IdeComponentsModule,
     HttpClientModule,
-    AppRoutingModule, 
+    AppRoutingModule,
     IdeLayoutModule,
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSnackBarModule
 
   ],
   providers: [],

@@ -4,7 +4,20 @@ export class AceEditorConstants {
     static AceThemes = {
         GithubTheme: "ace/theme/github",
         ChromeTheme: "ace/theme/cobalt",
-        DarkTheme: "ace/theme/monokai"
+        DarkTheme: "ace/theme/monokai",
+        XCodeTheme: "ace/theme/xcode"
     }
+    static AceLangModes = {
+        CSharp: "ace/mode/csharp",
+        Java: "ace/mode/java",
+        JavaScript: "ace/mode/javascript",
+        PHP: "ace/mode/php",
+        Ruby: "ace/mode/ruby"
+    }
+    static ApiEndPoints = {
+        CodingProblem: "coding-problem",
+        DefaultTests:"compile/default-tests",
+        CodingProblemDeprecated: "coding-problem/language/62",
 
+    }
 }

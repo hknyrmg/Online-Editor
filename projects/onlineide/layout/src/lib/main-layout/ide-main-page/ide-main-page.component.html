@@ -11,6 +11,18 @@
     </a>
 
     <span class="navbar-spacer"></span>
+    <mat-slide-toggle #slideToggle class="mr5" color="warn" (toggleChange)="toggleChange(!slideToggle.checked)"
+      [matTooltip]="slideToggle.checked ? 'Slide for dark mode' : 'Slide for light mode'">
+      <mat-icon *ngIf="!slideToggle.checked" [ngStyle]="{'color':'yellow'}" aria-hidden="false"
+        aria-label="Example home icon">
+        wb_incandescent
+      </mat-icon>
+      <mat-icon [ngStyle]="{'color':'white'}" *ngIf="slideToggle.checked" aria-hidden="false"
+        aria-label="Example home icon">
+        brightness_3
+      </mat-icon>
+
+    </mat-slide-toggle>
   </mat-toolbar>
   <mat-sidenav-container class="navbar-sidenav-container">
 

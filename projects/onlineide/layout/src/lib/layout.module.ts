@@ -11,6 +11,8 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatButtonModule} from '@angular/material/button';
 import {MatListModule} from '@angular/material/list';
 import { RouterModule } from '@angular/router';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -22,7 +24,9 @@ import { RouterModule } from '@angular/router';
     MatListModule,
     MatSidenavModule,
     MatButtonModule,
-    RouterModule 
+    RouterModule ,
+    MatSlideToggleModule,
+    MatTooltipModule
   ],
   exports: [MainHeaderComponent, IdeMainPageComponent, MainLeftSidebarComponent]
 })

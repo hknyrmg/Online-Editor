@@ -13,16 +13,14 @@ import { ButtonToggleModel, CodeProblemFieldComponent, DialogWindowComponent, Dr
 
 import { ProxyManager } from 'projects/onlineide/core/src/lib/Services/proxy-service/proxy-manager.service';
 import { ApiCallsMainPage } from 'src/constants/ApiCalls/MainEditor';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Language } from '@onlineide/common';
-import { Themes } from 'projects/onlineide/common/src/public-api';
+import { CompilerTestModel, Language, LanguageSpecificProblemDetail, Problem, Problems, Themes } from '@onlineide/common';
 import { AceEditorConstants } from 'src/constants/AceEditorConstants/ace-constants.model';
 import { CodeProblem, UserAnswer } from 'projects/onlineide/components/src/public-api';
 import { MatDialog } from '@angular/material/dialog';
-import { LoaderService } from 'projects/onlineide/core/src/lib/Services/loader-service/loader.service';
+import { LangModes } from 'projects/onlineide/common/src/lib/enums/supported-modes.enum';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 //const THEME = 'ace/theme/monokai';
-const LANG = 'ace/mode/javascript';
 @Component({
   selector: 'app-main-page',
   templateUrl: './main-page.component.html',
@@ -33,30 +31,37 @@ export class MainPageComponent implements OnInit {
   @ViewChild('codeProblemComp')
   codeProblemComp: CodeProblemFieldComponent;
 
+  currentDetail: LanguageSpecificProblemDetail;
 
 
-  public currentProblemList: CodeProblem[];
+  // panelOpenState = false;
+
+  testResultText: string;
+
+  // public currentProblemList: CodeProblem[];
+  public currentProblemList: Problems[];
   public currentAnswerList: UserAnswer[] = [];
+
+  LANG = AceEditorConstants.AceLangModes.JavaScript;
 
   private codeEditor: ace.Ace.Editor;
   private editorBeautify;
 
   constructor(private _cdRef: ChangeDetectorRef,
     private _proxyService: ProxyManager,
+    private _snackBar: MatSnackBar,
     public dialog: MatDialog) {
-      document.addEventListener("visibilitychange", () => {
-        if (document.hidden) {
-          //do whatever you want
-          console.log("Hidden");
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
 
-          this._updatePageLeaveCount();
 
-        }
-        else {
-          //do whatever you want
-          console.log("SHOWN");
-        }
-  });
+        this._updatePageLeaveCount();
+
+      }
+      else {
+        // 
+      }
+    });
 
   }
 
@@ -66,10 +71,9 @@ export class MainPageComponent implements OnInit {
   textAReaModel: string;
 
   // Language List variables
-  public languageList: Language[];
   public languageModelList: DropdownModel[];
   public dropDownTitleVar = "Languages";
-  selectedValue: any = "1";
+  selectedLangId: any;
 
   // Theme variables
   public buttonModelList: ButtonToggleModel[] = [
@@ -88,10 +92,8 @@ export class MainPageComponent implements OnInit {
 
     this.codeEditor = ace.edit(element, editorOptions);
     this.codeEditor.setTheme(AceEditorConstants.AceThemes.DarkTheme);
-    this.codeEditor.getSession().setMode(LANG);
     this.codeEditor.setShowFoldWidgets(true);
     this.editorBeautify = ace.require('ace/ext/beautify');
-    this.getLanguageList();
 
     this._cdRef.detectChanges();
     this.getRandomQuestion();
@@ -139,75 +141,108 @@ export class MainPageComponent implements OnInit {
   clearCode() {
     this.codeEditor.setValue(undefined);
   }
-  // getLanguageList() {
-  //   this._proxyService.get(undefined,
-  //     ApiCallsMainPage.MainEditorPageLanguage.Actions.Languages).subscribe((data: any) => {
-  //       console.log(data);
-  //       this.languageList = data;
-  //       this._mapDropLanguages(this.languageList);
-  //     }, (err: any) => {
-  //       console.log(err);
-  //     })
 
-  // }
 
   getRandomQuestion() {
     this._proxyService.get(undefined,
-      'coding-problem/language/62').subscribe((data: CodeProblem[]) => {
-        this.currentProblemList = data;
-        this._setSampleCode(this.currentProblemList[0]);
+      AceEditorConstants.ApiEndPoints.CodingProblem).subscribe((data: any) => {
+        console.log(data);
+        this.currentProblemList = data.problems;
+        this._setSampleCode(this.currentProblemList[0].languageSpecificProblemDetails[0]);
         this._setCurrentAnswerList();
         this._updateQuestionShown(0);
+        this.updateLanguageDropDown(this.currentProblemList[0].languageSpecificProblemDetails);
+        this._updateCurrentDetail(this.currentProblemList[0].languageSpecificProblemDetails[0]);
+        this._updateEditorLangMode(this.currentProblemList[0].languageSpecificProblemDetails[0]);
 
+        
       }, (err: any) => {
         console.log(err);
       });
 
-    // this.currentProblemList = this.dummyDataList;
-    // this._setSampleCode(this.currentProblemList[0]);
-    // this._setCurrentAnswerList();
-    // this._updateQuestionShown(0);
-
   }
 
+  private _updateEditorLangMode(langSpesificDetail: LanguageSpecificProblemDetail) {
+    switch (langSpesificDetail.language_id) {
+      case LangModes.Csharp:
+        this.codeEditor.getSession().setMode(AceEditorConstants.AceLangModes.CSharp);
+        break;
+      case LangModes.Java:
+        this.codeEditor.getSession().setMode(AceEditorConstants.AceLangModes.Java);
+
+        break;
+      case LangModes.Ruby:
+        this.codeEditor.getSession().setMode(AceEditorConstants.AceLangModes.Ruby);
+        break;
+      case LangModes.Php:
+        this.codeEditor.getSession().setMode(AceEditorConstants.AceLangModes.PHP);
+        break;
+      case LangModes.JavaScript:
+        this.codeEditor.getSession().setMode(AceEditorConstants.AceLangModes.JavaScript);
+        break;
+      default:
+        this.codeEditor.getSession().setMode(AceEditorConstants.AceLangModes.JavaScript);
+
+        break;
+    }
+  }
+  private _updateCurrentDetail(langSpesificDetail: LanguageSpecificProblemDetail) {
+    this.currentDetail = langSpesificDetail;
+
+  }
   private _setCurrentAnswerList() {
     for (let index = 0; index < this.currentProblemList.length; index++) {
       let answer: UserAnswer = new UserAnswer();
-      answer.coding_problem_id = this.currentProblemList[index].coding_problem_id;
-      answer.language_id = this.currentProblemList[index].language_id;
+      answer.coding_problem_id = this.currentProblemList[index].problem.id;
+      answer.language_id = this.currentProblemList[index].languageSpecificProblemDetails[0].language_id;
       answer.coding_problem_answer = "";
       this.currentAnswerList.push(answer);
     }
   }
 
-  private _setSampleCode(currentProb: CodeProblem) {
+  private _setSampleCode(currentProb: LanguageSpecificProblemDetail) {
     this._setCode(currentProb.code_sample);
 
   }
 
 
-  getLanguageList() {
-    this.languageList = [{ id: 1, name: 'JavaScript' },
-    { id: 2, name: 'C#' },
-    { id: 3, name: 'Java' }];
-    this._mapDropLanguages(this.languageList);
+  updateLanguageDropDown(lanGuageDetailList: LanguageSpecificProblemDetail[]) {
+    let langList: Language[] = [];
+    for (let index = 0; index < lanGuageDetailList.length; index++) {
+      let language: Language = new Language();
+      language.id = lanGuageDetailList[index].language_id;
+      language.name = lanGuageDetailList[index].language;
+      langList.push(language);
+    }
+    this._mapDropLanguages(langList);
 
   }
   private _mapDropLanguages(languageList: Language[]) {
-    this.languageModelList = this.languageList.map(function (langList: Language) {
+    this.languageModelList = languageList.map(function (langList: Language) {
       let dropdownModel: DropdownModel = new DropdownModel();
       dropdownModel.decription = langList.name;
       dropdownModel.value = langList.id.toString();
       return dropdownModel;
     });
+    this.selectedLangId = this.languageModelList[0].value;
   }
   themeChanged() {
 
   }
   dropChanged(selectedDrop) {
     console.log(selectedDrop);
-    this.selectedValue = selectedDrop.value;
+    this.selectedLangId = selectedDrop.value;
+    let selectedDetail = this.codeProblemComp.currentQuestion.languageSpecificProblemDetails.filter(x => x.language_id.toString() === selectedDrop.value)[0];
+    this._updateCurrentDetail(selectedDetail);
+    this._updateEditorLangMode(selectedDetail);
+    this._setSampleCode(selectedDetail);
+    this._updateCurrentAnswerListLangId(+selectedDetail.language_id);
   }
+
+  private _updateCurrentAnswerListLangId(langId: number) {
+    this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].language_id = langId;
+  }
+
   buttonChanged(clickedButton) {
     this.selectedButtonValue = clickedButton.value;
 
@@ -241,21 +276,32 @@ export class MainPageComponent implements OnInit {
     this._updateQuestionShown(this.codeProblemComp.currentQuestionNumber - 1);
 
     if (this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].coding_problem_answer === "") {
-      this._setSampleCode(this.codeProblemComp.currentQuestion);
+      this._setSampleCode(this.codeProblemComp.currentQuestion.languageSpecificProblemDetails[0]);
     }
     else {
       this._setCode(this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].coding_problem_answer);
     }
+
+    this.updateLanguageDropDown(this.codeProblemComp.currentQuestion.languageSpecificProblemDetails);
+    this._updateCurrentDetail(this.codeProblemComp.currentQuestion.languageSpecificProblemDetails[0]);
+    this._updateEditorLangMode(this.codeProblemComp.currentQuestion.languageSpecificProblemDetails[0]);
+
+    
+
   }
   prevClick() {
     this._saveAnswer(this.codeProblemComp.currentQuestionNumber);
 
-    if (this.currentAnswerList[this.codeProblemComp.currentQuestionNumber -1].coding_problem_answer === "") {
-      this._setSampleCode(this.codeProblemComp.currentQuestion);
+    if (this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].coding_problem_answer === "") {
+      this._setSampleCode(this.codeProblemComp.currentQuestion.languageSpecificProblemDetails[0]);
     }
     else {
-      this._setCode(this.currentAnswerList[this.codeProblemComp.currentQuestionNumber -1].coding_problem_answer);
+      this._setCode(this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].coding_problem_answer);
     }
+    this.updateLanguageDropDown(this.codeProblemComp.currentQuestion.languageSpecificProblemDetails);
+    this._updateCurrentDetail(this.codeProblemComp.currentQuestion.languageSpecificProblemDetails[0]);
+    this._updateEditorLangMode(this.codeProblemComp.currentQuestion.languageSpecificProblemDetails[0]);
+
   }
   sendClick() {
     // mevcut cevap kaydi
@@ -272,29 +318,56 @@ export class MainPageComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result){
+      if (result) {
         this.sendAnswers();
       }
     });
   }
 
-  sendAnswers(){
+  testCode() {
+    // this.panelOpenState = true;
+
+    let compTestModel: CompilerTestModel = new CompilerTestModel();
+    compTestModel.language_specific_problem_detail_id = this.currentDetail.id;
+    compTestModel.source_code = this._getCode();
+    this._proxyService.post(AceEditorConstants.ApiEndPoints.DefaultTests,
+      compTestModel
+    ).subscribe((data: any) => {
+      data[0].stdout
+      console.log(data);
+      this.testResultText = data[0] && data[0].stdout ? "Compiled Succesfully!" : ""  ;
+      this.openSnackBar(this.testResultText, "OK");
+
+      }, (err: any) => {
+
+      console.log(err);
+      let message = err.message ? err.message : "An error occurred!";
+      this.testResultText = message;
+      this.openSnackBar(this.testResultText, "OK");
+
+     // this.openResultDialog(message);
+    }, () => {
+    });
+
+  }
+
+  sendAnswers() {
 
 
 
     this._proxyService.post('compile-test',
       this.currentAnswerList
-      ).subscribe((data: any) => {
+    ).subscribe((data: any) => {
 
-       console.log(data);
-       this.openResultDialog("Congrulations! Your answers has been sent.");
-      }, (err: any) => {
+      console.log(data);
+      this.openResultDialog("Congrulations! Your answers has been sent.");
+    }, (err: any) => {
 
-        console.log(err);
-        let message = err.message ? err.message : "An error occurred!";
-        this.openResultDialog(message);
-      }, ()=>{
-      }); 
+      console.log(err);
+      let message = err.message ? err.message : "An error occurred!";
+      this.openResultDialog(message);
+    }, () => {
+    });
   }
   openResultDialog(message: string): void {
     const dialogRef = this.dialog.open(DialogWindowComponent, {
@@ -309,29 +382,49 @@ export class MainPageComponent implements OnInit {
     });
   }
 
- 
+
   @HostListener('paste', ['$event'])
   onPaste(e: ClipboardEvent) {
 
     this._updatePasteCount();
   }
 
- 
- 
-private _updatePageLeaveCount(){
- this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].page_leave_count += 1;
-}
-private _updatePasteCount(){
-  this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].ctrl_v_count += 1;
- }
 
-private _updateQuestionShown(index: number){
-  this.currentAnswerList[index].is_question_shown = true;
-}
-public questionCopied(event){
-  console.log(event);
-  this.currentAnswerList[event -1].is_question_copied = true;
 
-}
+  private _updatePageLeaveCount() {
+    this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].page_leave_count += 1;
+  }
+  private _updatePasteCount() {
+    this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].ctrl_v_count += 1;
+  }
+
+  private _updateQuestionShown(index: number) {
+    this.currentAnswerList[index].is_question_shown = true;
+  }
+  public questionCopied(event) {
+    console.log(event);
+    this.currentAnswerList[event - 1].is_question_copied = true;
+
+  }
+  public modeToggleChange(slideToggleState: Boolean){
+    switch (slideToggleState) {
+      case true:
+        this.codeEditor.setTheme(AceEditorConstants.AceThemes.XCodeTheme);
+        break;
+      case false:
+        this.codeEditor.setTheme(AceEditorConstants.AceThemes.DarkTheme);
+        break;
+     
+      default:
+        this.codeEditor.setTheme(AceEditorConstants.AceThemes.DarkTheme);
+        break;
+    }
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 7000,
+    });
+  }
 }
 
