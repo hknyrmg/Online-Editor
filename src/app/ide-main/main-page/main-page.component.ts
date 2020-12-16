@@ -335,7 +335,7 @@ export class MainPageComponent implements OnInit {
     ).subscribe((data: any) => {
       data[0].stdout
       console.log(data);
-      this.testResultText = data[0] && data[0].stdout ? "Compiled Succesfully!" : ""  ;
+      this.testResultText = data[0] && data[0].stdout ?  `Task ${this.codeProblemComp.currentQuestionNumber.toString()} Compiled Succesfully!` : "An error occurred!"  ;
       this.openSnackBar(this.testResultText, "OK");
 
       }, (err: any) => {
