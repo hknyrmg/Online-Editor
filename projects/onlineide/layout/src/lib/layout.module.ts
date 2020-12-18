@@ -13,6 +13,7 @@ import {MatListModule} from '@angular/material/list';
 import { RouterModule } from '@angular/router';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatStepperModule} from '@angular/material/stepper';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     MatButtonModule,
     RouterModule ,
     MatSlideToggleModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatStepperModule
   ],
   exports: [MainHeaderComponent, IdeMainPageComponent, MainLeftSidebarComponent]
 })

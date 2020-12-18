@@ -18,6 +18,8 @@ import { IdeLayoutModule } from '@onlineide/layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import {MatIconModule} from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -34,8 +36,10 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     IdeLayoutModule,
     MatButtonModule,
     MatDialogModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatIconModule,
 
+    MatTooltipModule
   ],
   providers: [],
   exports: [MainPageComponent]

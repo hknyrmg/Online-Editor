@@ -13,7 +13,7 @@ import { ButtonToggleModel, CodeProblemFieldComponent, DialogWindowComponent, Dr
 
 import { ProxyManager } from 'projects/onlineide/core/src/lib/Services/proxy-service/proxy-manager.service';
 import { ApiCallsMainPage } from 'src/constants/ApiCalls/MainEditor';
-import { CompilerTestModel, Language, LanguageSpecificProblemDetail, Problem, Problems, Themes } from '@onlineide/common';
+import { CompilerTestModel, Language, LanguageSpecificProblemDetail, Problem, Problems, SuccededCompile, Themes } from '@onlineide/common';
 import { AceEditorConstants } from 'src/constants/AceEditorConstants/ace-constants.model';
 import { CodeProblem, UserAnswer } from 'projects/onlineide/components/src/public-api';
 import { MatDialog } from '@angular/material/dialog';
@@ -34,13 +34,16 @@ export class MainPageComponent implements OnInit {
   currentDetail: LanguageSpecificProblemDetail;
 
 
-  // panelOpenState = false;
 
   testResultText: string;
 
   // public currentProblemList: CodeProblem[];
   public currentProblemList: Problems[];
   public currentAnswerList: UserAnswer[] = [];
+
+  //Succeded Compile List
+  public succededCompileList: SuccededCompile[] = [];
+
 
   LANG = AceEditorConstants.AceLangModes.JavaScript;
 
@@ -155,7 +158,7 @@ export class MainPageComponent implements OnInit {
         this._updateCurrentDetail(this.currentProblemList[0].languageSpecificProblemDetails[0]);
         this._updateEditorLangMode(this.currentProblemList[0].languageSpecificProblemDetails[0]);
 
-        
+
       }, (err: any) => {
         console.log(err);
       });
@@ -286,7 +289,7 @@ export class MainPageComponent implements OnInit {
     this._updateCurrentDetail(this.codeProblemComp.currentQuestion.languageSpecificProblemDetails[0]);
     this._updateEditorLangMode(this.codeProblemComp.currentQuestion.languageSpecificProblemDetails[0]);
 
-    
+
 
   }
   prevClick() {
@@ -325,37 +328,63 @@ export class MainPageComponent implements OnInit {
   }
 
   testCode() {
-    // this.panelOpenState = true;
-
     let compTestModel: CompilerTestModel = new CompilerTestModel();
     compTestModel.language_specific_problem_detail_id = this.currentDetail.id;
     compTestModel.source_code = this._getCode();
     this._proxyService.post(AceEditorConstants.ApiEndPoints.DefaultTests,
       compTestModel
     ).subscribe((data: any) => {
-      data[0].stdout
-      console.log(data);
-      this.testResultText = data[0] && data[0].stdout ?  `Task ${this.codeProblemComp.currentQuestionNumber.toString()} Compiled Succesfully!` : "An error occurred!"  ;
+      this.testResultText = data[0] && data[0].stdout ? `Task ${this.codeProblemComp.currentQuestionNumber.toString()} Compiled Succesfully!` : "An error occurred!";
       this.openSnackBar(this.testResultText, "OK");
-
-      }, (err: any) => {
+      if (data[0] && data[0].stdout) {
+        this.updateSuccededCompileList(compTestModel);
+      }
+    }, (err: any) => {
 
       console.log(err);
       let message = err.message ? err.message : "An error occurred!";
       this.testResultText = message;
       this.openSnackBar(this.testResultText, "OK");
 
-     // this.openResultDialog(message);
+      // this.openResultDialog(message);
     }, () => {
     });
 
   }
 
+  updateSuccededCompileList(compileTest: CompilerTestModel) {
+    if (this.succededCompileList &&
+      this.succededCompileList.find(x => x.language_specific_problem_detail_id ===
+        compileTest.language_specific_problem_detail_id)) {
+      this.succededCompileList.filter(x => x.language_specific_problem_detail_id ===
+        compileTest.language_specific_problem_detail_id)[0].source_code = compileTest.source_code;
+    }
+    else {
+      let sucComp = new SuccededCompile();
+      sucComp.source_code = compileTest.source_code;
+      sucComp.language_specific_problem_detail_id = compileTest.language_specific_problem_detail_id;
+      this.succededCompileList.push(sucComp);
+    }
+  }
+  getLastSuccededCode(){
+    if(this.succededCompileList && this.succededCompileList.find(x => x.language_specific_problem_detail_id ===
+      this.currentDetail.id) ){
+        let code = this.succededCompileList.filter(x => x.language_specific_problem_detail_id ===
+          this.currentDetail.id)[0].source_code;
+        this._setCode(code);
+
+      }
+  }
+isRestoreButtonVisible(): Boolean{
+  if(this.succededCompileList && this.currentDetail &&
+     this.succededCompileList.find(x => x.language_specific_problem_detail_id ===
+    this.currentDetail.id) ){
+    return true;
+    }
+  return false;
+}
   sendAnswers() {
-
-
-
-    this._proxyService.post('compile-test',
+    this._proxyService.post(AceEditorConstants.ApiEndPoints.SubmitEndPoint,
       this.currentAnswerList
     ).subscribe((data: any) => {
 
@@ -406,7 +435,7 @@ export class MainPageComponent implements OnInit {
     this.currentAnswerList[event - 1].is_question_copied = true;
 
   }
-  public modeToggleChange(slideToggleState: Boolean){
+  public modeToggleChange(slideToggleState: Boolean) {
     switch (slideToggleState) {
       case true:
         this.codeEditor.setTheme(AceEditorConstants.AceThemes.XCodeTheme);
@@ -414,7 +443,7 @@ export class MainPageComponent implements OnInit {
       case false:
         this.codeEditor.setTheme(AceEditorConstants.AceThemes.DarkTheme);
         break;
-     
+
       default:
         this.codeEditor.setTheme(AceEditorConstants.AceThemes.DarkTheme);
         break;

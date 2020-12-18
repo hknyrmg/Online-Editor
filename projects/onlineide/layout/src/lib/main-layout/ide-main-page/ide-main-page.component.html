@@ -12,7 +12,7 @@
 
     <span class="navbar-spacer"></span>
     <mat-slide-toggle #slideToggle class="mr5" color="warn" (toggleChange)="toggleChange(!slideToggle.checked)"
-      [matTooltip]="slideToggle.checked ? 'Slide for dark mode' : 'Slide for light mode'">
+      [matTooltip]="slideToggle.checked ? 'Switch to dark theme' : 'Switch to light theme'">
       <mat-icon *ngIf="!slideToggle.checked" [ngStyle]="{'color':'yellow'}" aria-hidden="false"
         aria-label="Example home icon">
         wb_incandescent
@@ -23,6 +23,10 @@
       </mat-icon>
 
     </mat-slide-toggle>
+
+    <button (click)="sidenav2.toggle()" mat-icon-button aria-label="Example icon button with a vertical three dot icon">
+      <mat-icon>help</mat-icon>
+    </button>
   </mat-toolbar>
   <mat-sidenav-container class="navbar-sidenav-container">
 
@@ -65,8 +69,68 @@
       </mat-nav-list>
     </mat-sidenav>
 
+    <!-- rightside -->
+    <mat-sidenav #sidenav2 mode="over" position="end">
+      <mat-vertical-stepper [linear]="false" #stepper>
+        <mat-step>
+          <ng-template matStepLabel>Language Dropdown</ng-template>
+          <img class="images" src="assets/img/language-drop.PNG" />
+          <p>Choose the language you want from the dropdown</p>
+        </mat-step>
+        <mat-step>
+          <ng-template matStepLabel>Task Card</ng-template>
 
+          <img class="images" src="assets/img/task-card.PNG" />
 
+          <ol>
+            <li>
+              <button mat-stroked-button color="primary">Send</button> submits
+              all tasks
+            </li>
+            <li>
+              <button mat-stroked-button color="primary">Prev</button> views
+              previous task
+            </li>
+            <li>
+              <button mat-stroked-button color="primary">Next</button> views
+              next task
+            </li>
+          </ol>
+
+        </mat-step>
+        <mat-step>
+          <ng-template matStepLabel>IDE Buttons</ng-template>
+          <img class="images" src="assets/img/IDE-buttons.PNG" />
+          <ol>
+            <li>
+              <button mat-fab aria-label="Example icon button with a delete icon" [matTooltip]="'Run Task'">
+                <mat-icon>play_arrow</mat-icon>
+              </button> runs current task, shows result as snackbar
+            </li>
+
+            <li>
+              <button mat-fab color="primary" aria-label="Example icon button with a delete icon">
+                <mat-icon>format_paint</mat-icon>
+              </button> formats Code
+            </li>
+            <li>
+
+            <button mat-fab color="primary" aria-label="Example icon button with a delete icon"
+              [matTooltip]="'Get last success'">
+              <mat-icon>restore</mat-icon>
+            </button> updates IDE with current task's last success compile (if exists)
+            </li>
+            <li>
+              <button mat-fab color="primary" aria-label="Example icon button with a delete icon"
+                [matTooltip]="'Clear IDE'">
+                <mat-icon>delete_sweep</mat-icon>
+              </button> Clears IDE
+            </li>
+          </ol>
+        </mat-step>
+
+      </mat-vertical-stepper>
+    </mat-sidenav>
     <mat-sidenav-content>
       <ng-content>
 

@@ -38,13 +38,47 @@
 
             <!-- the code editor -->
             <div class="row mb-4">
-                <div class="col">
+
+                <div class="col-md-12">
                     <div class="code-editor" #codeEditor2></div>
                 </div>
+
             </div>
 
+
+            <table>
+                <tr>
+                    <td class="first">
+                        <button mat-fab (click)="clearCode()" color="primary" aria-label="Example icon button with a delete icon"
+                        [matTooltip]="'Clear IDE'">
+                            <mat-icon>delete_sweep</mat-icon>
+                          </button>
+                    </td>
+                    <td class="second">
+                        <button mat-fab (click)="beautifyContent()" color="primary" aria-label="icon button with a format icon"
+                        [matTooltip]="'Format Code'">
+                            <mat-icon>format_paint</mat-icon>
+                          </button>
+                    </td>
+                    <td class="third">
+                        <button [disabled]="!isRestoreButtonVisible()" (click)="getLastSuccededCode()" mat-fab color="primary" aria-label="Example icon button with a delete icon"
+                        [matTooltip]="'Get last success'">
+                            <mat-icon>restore</mat-icon>
+                          </button>
+                    </td>
+                    <td class="last">
+
+                        <button mat-fab (click)="testCode()"  aria-label="Example icon button with a delete icon"
+                        [matTooltip]="'Run Task'">
+                            <mat-icon>play_arrow</mat-icon>
+                          </button>
+                    </td>
+                </tr>
+            </table>
+
+
             <!-- run, clear & beautify buttons -->
-            <div class="row mb-4 justify-content-center mx-4">
+            <!-- <div class="row mb-4 justify-content-center mx-4">
                 <div class="col-4 col-lg-2 col-md-3 col-sm-4 col-xs-4 w-75">
 
                     <button mat-raised-button (click)="clearCode()">Clear</button>
@@ -59,7 +93,7 @@
 
                 </div>
 
-            </div>
+            </div> -->
 
 
         </div>

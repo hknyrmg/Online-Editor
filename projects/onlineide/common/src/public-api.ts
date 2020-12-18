@@ -9,6 +9,7 @@ export * from './lib/models/coding-problem-models/Problem';
 export * from './lib/models/coding-problem-models/Problems';
 
 export * from './lib/models/coding-problem-models/CompilerTest.model';
+export * from './lib/models/coding-problem-models/SuccededCompile.model';
 
 
 export {Language} from './lib/models/language.model';
