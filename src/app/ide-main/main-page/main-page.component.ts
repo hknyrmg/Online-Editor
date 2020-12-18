@@ -328,6 +328,7 @@ export class MainPageComponent implements OnInit {
   }
 
   testCode() {
+    this._updateRunTestCount();
     let compTestModel: CompilerTestModel = new CompilerTestModel();
     compTestModel.language_specific_problem_detail_id = this.currentDetail.id;
     compTestModel.source_code = this._getCode();
@@ -366,23 +367,23 @@ export class MainPageComponent implements OnInit {
       this.succededCompileList.push(sucComp);
     }
   }
-  getLastSuccededCode(){
-    if(this.succededCompileList && this.succededCompileList.find(x => x.language_specific_problem_detail_id ===
-      this.currentDetail.id) ){
-        let code = this.succededCompileList.filter(x => x.language_specific_problem_detail_id ===
-          this.currentDetail.id)[0].source_code;
-        this._setCode(code);
+  getLastSuccededCode() {
+    if (this.succededCompileList && this.succededCompileList.find(x => x.language_specific_problem_detail_id ===
+      this.currentDetail.id)) {
+      let code = this.succededCompileList.filter(x => x.language_specific_problem_detail_id ===
+        this.currentDetail.id)[0].source_code;
+      this._setCode(code);
 
-      }
-  }
-isRestoreButtonVisible(): Boolean{
-  if(this.succededCompileList && this.currentDetail &&
-     this.succededCompileList.find(x => x.language_specific_problem_detail_id ===
-    this.currentDetail.id) ){
-    return true;
     }
-  return false;
-}
+  }
+  isRestoreButtonVisible(): Boolean {
+    if (this.succededCompileList && this.currentDetail &&
+      this.succededCompileList.find(x => x.language_specific_problem_detail_id ===
+        this.currentDetail.id)) {
+      return true;
+    }
+    return false;
+  }
   sendAnswers() {
     this._proxyService.post(AceEditorConstants.ApiEndPoints.SubmitEndPoint,
       this.currentAnswerList
@@ -419,7 +420,9 @@ isRestoreButtonVisible(): Boolean{
   }
 
 
-
+  private _updateRunTestCount() {
+    this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].run_test_count += 1;
+  }
   private _updatePageLeaveCount() {
     this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].page_leave_count += 1;
   }
