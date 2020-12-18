@@ -76,3 +76,24 @@ width: min-content;
     object-fit: scale-down;
   }
 }
+
+.flicker {
+  animation: bounce 1s infinite alternate;
+  -webkit-animation: bounce 0.3s infinite alternate !important;
+}
+@keyframes bounce {
+  from {
+    transform: translateY(0px);
+  }
+  to {
+    transform: translateY(-15px);
+  }
+}
+@-webkit-keyframes bounce {
+  from {
+    transform: translateY(0px);
+  }
+  to {
+    transform: translateY(-15px);
+  }
+}

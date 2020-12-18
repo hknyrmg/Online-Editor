@@ -14,6 +14,7 @@ import { RouterModule } from '@angular/router';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatStepperModule} from '@angular/material/stepper';
+import { CoreModule } from '@onlineide/core';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import {MatStepperModule} from '@angular/material/stepper';
     RouterModule ,
     MatSlideToggleModule,
     MatTooltipModule,
-    MatStepperModule
+    MatStepperModule,
+    CoreModule
   ],
   exports: [MainHeaderComponent, IdeMainPageComponent, MainLeftSidebarComponent]
 })

@@ -12,3 +12,4 @@ export {ProxyContentTypes} from './lib/Services/proxy-service/enum/proxy-content
 export {ProxyManager} from './lib/Services/proxy-service/proxy-manager.service';
 
 export {LoaderService} from './lib/Services/loader-service/loader.service';
+export {ChangeClassDirective} from './lib/Directives/change-class.directive';

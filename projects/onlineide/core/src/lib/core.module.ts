@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
+import { ChangeClassDirective } from './Directives/change-class.directive';
 
 
 
 @NgModule({
-  declarations: [],
+  declarations: [ChangeClassDirective],
   imports: [
   ],
-  exports: []
+  exports: [ChangeClassDirective]
 })
 export class CoreModule { }
