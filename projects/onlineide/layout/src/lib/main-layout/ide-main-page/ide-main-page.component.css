@@ -97,3 +97,54 @@ width: min-content;
     transform: translateY(-15px);
   }
 }
+.countdown-div{
+  height: 4px; width: 55px; 
+  border-radius: 25px;
+  border: 2px solid #73AD21;
+  padding:30px 20px 20px 30px;
+  margin-top:2px; margin-left: 2px;
+  position: absolute;left:0;top:0;}
+.countdown-s{
+  position: absolute;
+  left:0;
+  top:0; 
+  padding: 10px;
+}
+.countdown-sty{
+  font-family:fantasy;
+}
+
+.rotate-settings {
+  -webkit-animation: rotation 1s infinite linear;
+}
+@keyframes rotation {
+  from {
+    -webkit-transform: rotate(0deg);
+}
+to {
+    -webkit-transform: rotate(359deg);
+}
+}
+@-webkit-keyframes rotation {
+  from {
+      -webkit-transform: rotate(0deg);
+  }
+  to {
+      -webkit-transform: rotate(359deg);
+  }
+}
+
+.opt-t{
+  border-collapse: separate;
+  text-indent: initial;
+  border-spacing: 2px;
+}
+
+.opt-sect{
+  display: flex;
+  align-content: center;
+  align-items: center;
+}
+.opt-margin {
+  margin: 8px;
+}

@@ -8,3 +8,9 @@ export {IdeMainPageComponent} from './lib/main-layout/ide-main-page/ide-main-pag
 export {MainLeftSidebarComponent} from './lib/main-layout/main-left-sidebar/main-left-sidebar.component'
 
 export * from './lib/layout.module';
+
+export * from './lib/main-layout/ide-main-page/countdown.model';
+
+export * from './lib/EditorModels/editor-options.model';
+
+export * from './lib/EditorModels/fold-style.enum';

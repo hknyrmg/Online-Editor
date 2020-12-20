@@ -1,4 +1,7 @@
-<ide-main-page (toggleChangeEvent)="modeToggleChange($event)">
+<ide-main-page [countDownModel]="countDownModel"
+(timeFinished)="timeFinished()"
+(editorOptionsChangeEvent)="editorOptionsChangeEvent($event)"
+ (toggleChangeEvent)="modeToggleChange($event)">
     <form #form="ngForm" (ngSubmit)="form.form.valid && runCode()" novalidate>
 
 
@@ -46,55 +49,42 @@
             </div>
 
 
-            <table>
+            <table class="button-table">
                 <tr>
                     <td class="first">
-                        <button mat-fab (click)="clearCode()" color="primary" aria-label="Example icon button with a delete icon"
-                        [matTooltip]="'Clear IDE'">
+                        <button mat-fab (click)="clearCode()" color="primary"
+                            aria-label="Example icon button with a delete icon" [matTooltip]="'Clear IDE'">
                             <mat-icon>delete_sweep</mat-icon>
-                          </button>
+                        </button>
                     </td>
                     <td class="second">
-                        <button mat-fab (click)="beautifyContent()" color="primary" aria-label="icon button with a format icon"
-                        [matTooltip]="'Format Code'">
+                        <button mat-fab (click)="beautifyContent()" color="primary"
+                            aria-label="icon button with a format icon" [matTooltip]="'Format Code'">
                             <mat-icon>format_paint</mat-icon>
-                          </button>
+                        </button>
                     </td>
                     <td class="third">
-                        <button [disabled]="!isRestoreButtonVisible()" (click)="getLastSuccededCode()" mat-fab color="primary" aria-label="Example icon button with a delete icon"
-                        [matTooltip]="'Get last success'">
+                        <button [disabled]="!isRestoreButtonVisible()" (click)="getLastSuccededCode()" mat-fab
+                            color="primary" aria-label="Example icon button with a delete icon"
+                            [matTooltip]="'Get last success'">
                             <mat-icon>restore</mat-icon>
-                          </button>
+                        </button>
                     </td>
+           
+
                     <td class="last">
 
-                        <button mat-fab (click)="testCode()"  aria-label="Example icon button with a delete icon"
-                        [matTooltip]="'Run Task'">
+                        <button mat-fab (click)="testCode()" aria-label="Example icon button with a delete icon"
+                            [matTooltip]="'Run Task'">
                             <mat-icon>play_arrow</mat-icon>
-                          </button>
+                        </button>
                     </td>
                 </tr>
             </table>
 
 
-            <!-- run, clear & beautify buttons -->
-            <!-- <div class="row mb-4 justify-content-center mx-4">
-                <div class="col-4 col-lg-2 col-md-3 col-sm-4 col-xs-4 w-75">
-
-                    <button mat-raised-button (click)="clearCode()">Clear</button>
-
-                </div>
-                <div class="col-4 col-lg-2 col-md-3 col-sm-4 col-xs-4 w-75">
-                    <button mat-stroked-button color="primary" (click)="testCode()">Run</button>
-                </div>
-                <div class="col-4 col-lg-2 col-md-3 col-sm-4 col-xs-4 w-75">
-
-                    <button mat-raised-button (click)="beautifyContent()">Beautify</button>
-
-                </div>
-
-            </div> -->
-
+           
+           
 
         </div>
 

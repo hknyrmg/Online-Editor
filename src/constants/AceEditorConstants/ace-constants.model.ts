@@ -17,8 +17,9 @@ export class AceEditorConstants {
     static ApiEndPoints = {
         CodingProblem: "coding-problem",
         DefaultTests:"compile/default-tests",
-        SubmitEndPoint: "compile-test",
+        SubmitEndPointTest: "compile-test",
         CodingProblemDeprecated: "coding-problem/language/62",
+        SubmitEndPoint: "coding-problem/submit"
 
     }
 }

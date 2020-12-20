@@ -1,6 +1,6 @@
 <div class="navbar-container">
   <mat-toolbar class="navbar" color="primary">
-    <button mat-icon-button (click)="sidenav.toggle()">
+    <button mat-icon-button (click)="startSideNavClick(SideNavType.over)">
       <mat-icon>menu</mat-icon>
     </button>
 
@@ -23,59 +23,188 @@
       </mat-icon>
 
     </mat-slide-toggle>
-
-    <button changeClass="flicker" (click)="sidenav2.toggle()" mat-icon-button aria-label="Example icon button with a vertical three dot icon">
-      <mat-icon >help</mat-icon>
+    <button changeClass="rotate-settings" (click)="startSideNavClick(SideNavType.side)" mat-icon-button
+      aria-label="Example icon button with a vertical three dot icon">
+      <mat-icon>settings</mat-icon>
+    </button>
+    <button changeClass="flicker" (click)="sidenav2.toggle()" mat-icon-button
+      aria-label="Example icon button with a vertical three dot icon">
+      <mat-icon>help</mat-icon>
     </button>
   </mat-toolbar>
   <mat-sidenav-container class="navbar-sidenav-container">
 
     <!-- left side -->
-    <mat-sidenav #sidenav mode="over" [(opened)]="opened">
-      <mat-nav-list>
-        <h3 mat-subheader>Home</h3>
+    <mat-sidenav #sidenav [mode]="(sideNavType === SideNavType.over || 
+    isMobileDevice) ? 'over' : 'side'" [(opened)]="opened">
+      <ng-container *ngIf="sideNavType === SideNavType.over">
+        <mat-nav-list>
+          <h3 mat-subheader>Home</h3>
+          <a mat-list-item [routerLink]="['/dashboard']" routerLinkActive="active">
+            <mat-icon mat-list-icon>
+              dashboard
+            </mat-icon>
+            <p mat-line> Dashboard </p>
+          </a>
 
-        <a mat-list-item [routerLink]="['/dashboard']" routerLinkActive="active">
-          <mat-icon mat-list-icon>
-            dashboard
-          </mat-icon>
-          <p mat-line> Dashboard </p>
-        </a>
+          <a mat-list-item [routerLink]="['/customers']" routerLinkActive="active">
+            <mat-icon mat-list-icon>
+              business
+            </mat-icon>
+            <p mat-line> Customers </p>
+          </a>
+          <a mat-list-item [routerLink]="['/users']" routerLinkActive="active">
+            <mat-icon mat-list-icon>
+              people
+            </mat-icon>
+            <p mat-line> Users </p>
+          </a>
 
-        <a mat-list-item [routerLink]="['/customers']" routerLinkActive="active">
-          <mat-icon mat-list-icon>
-            business
-          </mat-icon>
-          <p mat-line> Customers </p>
-        </a>
-        <a mat-list-item [routerLink]="['/users']" routerLinkActive="active">
-          <mat-icon mat-list-icon>
-            people
-          </mat-icon>
-          <p mat-line> Users </p>
-        </a>
+          <a mat-list-item [routerLink]="['/account/profile']">
+            <mat-icon mat-list-icon>person</mat-icon>
+            <p mat-line> Account </p>
+          </a>
 
-        <a mat-list-item [routerLink]="['/account/profile']">
-          <mat-icon mat-list-icon>person</mat-icon>
-          <p mat-line> Account </p>
-        </a>
-
-        <a mat-list-item [routerLink]="['/auth/login']">
-          <mat-icon mat-list-icon>exit_to_app</mat-icon>
-          <p mat-line> Log out </p>
-        </a>
+          <a mat-list-item [routerLink]="['/auth/login']">
+            <mat-icon mat-list-icon>exit_to_app</mat-icon>
+            <p mat-line> Log out </p>
+          </a>
 
 
-      </mat-nav-list>
+        </mat-nav-list>
+      </ng-container>
+
+      <ng-container *ngIf="sideNavType === SideNavType.side">
+        <form>
+
+        <mat-nav-list>
+          <h3 mat-subheader>IDE Options</h3>
+          <table class="opt-t">
+            <tr>
+
+              <td>
+                <label for="fontSize">Font Size:&nbsp;</label>
+                <input matInput type="number" id="fontSize" min="7" max="22"
+                 [value]="editorOptions.fontSize"  (change)="fontSizeChanged($event)">
+
+              </td>
+            </tr>
+            <tr>
+
+              <td>
+                  <mat-checkbox
+                      [(ngModel)]="editorOptions.enableLiveAutocompletion"
+                     [checked]="editorOptions.enableLiveAutocompletion"
+                      labelPosition="before" (change)="liveAutoCompChange($event)">
+                      Enable Live AutoCompletion
+                  </mat-checkbox>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                  <mat-checkbox
+                      [(ngModel)]="editorOptions.highlightActiveLine"
+                     [checked]="editorOptions.highlightActiveLine"
+                      labelPosition="before" (change)="highlightChange($event)">
+                      Highlight Active Line
+                  </mat-checkbox>
+              </td>
+            </tr>
+            <tr>
+
+              <td>
+                  <mat-checkbox
+                      [(ngModel)]="editorOptions.showGutter"
+                     [checked]="editorOptions.showGutter"
+                      labelPosition="before" (change)="gutterChange($event)">
+                      Show Gutter
+                  </mat-checkbox>
+              </td>
+            </tr>
+            <tr>
+
+              <td>
+                  <mat-checkbox
+                      [(ngModel)]="editorOptions.showLineNumbers"
+                     [checked]="editorOptions.showLineNumbers"
+                      labelPosition="before" (change)="lineNumbersChange($event)">
+                      Show Line Numbers
+                  </mat-checkbox>
+              </td>
+            </tr>
+            <tr>
+
+              <td>
+                  <mat-checkbox
+                      [(ngModel)]="editorOptions.showInvisibles"
+                     [checked]="editorOptions.showInvisibles"
+                      labelPosition="before" (change)="showInvisiblesChange($event)">
+                      Show Invisibles
+                  </mat-checkbox>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                  <mat-checkbox
+                      [(ngModel)]="editorOptions.showPrintMargin"
+                     [checked]="editorOptions.showPrintMargin"
+                      labelPosition="before" (change)="showPrintMarginChange($event)">
+                      Show Print Margin
+                  </mat-checkbox>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ide-dropdown [selectedValue]="editorOptions.foldStyle" dropDownTitle="Folding Style"
+                [dropDataList]="dropFoldList" (dropChangedEvent)="dropFoldChanged($event)">
+            </ide-dropdown>
+              </td>
+            </tr>
+          </table>
+
+          
+
+        </mat-nav-list>
+      </form>
+
+      </ng-container>
+
+
     </mat-sidenav>
+
 
     <!-- rightside -->
     <mat-sidenav #sidenav2 mode="over" position="end">
       <mat-vertical-stepper [linear]="false" #stepper>
         <mat-step>
+          <ng-template matStepLabel>Timer</ng-template>
+          <img class="images" src="assets/img/timer.PNG" />
+
+          <ol>
+            <li>
+              <p>Timer shows the remaining time for all tasks.</p>
+            </li>
+            <li>
+              <p>15 minutes is given for every task.</p>
+            </li>
+            <li>
+              <p>At the end of the time, your answers will be submitted.</p>
+            </li>
+          </ol>
+
+        </mat-step>
+        <mat-step>
           <ng-template matStepLabel>Language Dropdown</ng-template>
           <img class="images" src="assets/img/language-drop.PNG" />
-          <p>Choose the language you want from the dropdown</p>
+          <ol>
+            <li>
+              <p>Choose the language you want from the dropdown</p>
+            </li>
+            <li>
+              <p>The sample code and task insturctions will be updated, depending on your selection.</p>
+            </li>
+
+          </ol>
         </mat-step>
         <mat-step>
           <ng-template matStepLabel>Task Card</ng-template>
@@ -84,7 +213,7 @@
 
           <ol>
             <li>
-              <button mat-stroked-button color="primary">Send</button> submits
+              <button mat-stroked-button color="primary">Submit All</button> submits
               all tasks
             </li>
             <li>
@@ -105,7 +234,7 @@
             <li>
               <button mat-fab aria-label="Example icon button with a delete icon" [matTooltip]="'Run Task'">
                 <mat-icon>play_arrow</mat-icon>
-              </button> runs current task, shows result as snackbar
+              </button> runs the current task, shows the result as snackbar
             </li>
 
             <li>
@@ -115,16 +244,16 @@
             </li>
             <li>
 
-            <button mat-fab color="primary" aria-label="Example icon button with a delete icon"
-              [matTooltip]="'Get last success'">
-              <mat-icon>restore</mat-icon>
-            </button> updates IDE with current task's last success compile (if exists)
+              <button mat-fab color="primary" aria-label="Example icon button with a delete icon"
+                [matTooltip]="'Get last success'">
+                <mat-icon>restore</mat-icon>
+              </button> updates IDE with current task's last success compile (if exists)
             </li>
             <li>
               <button mat-fab color="primary" aria-label="Example icon button with a delete icon"
                 [matTooltip]="'Clear IDE'">
                 <mat-icon>delete_sweep</mat-icon>
-              </button> Clears IDE
+              </button> clears IDE
             </li>
           </ol>
         </mat-step>
@@ -132,9 +261,19 @@
       </mat-vertical-stepper>
     </mat-sidenav>
     <mat-sidenav-content>
-      <ng-content>
+      <div>
 
-      </ng-content>
+        <span *ngIf="countDownModel" class="countdown-div">
+          <span class="countdown-s">
+            <countdown class="countdown-sty" (event)="timesUp($event)"
+              [config]="{ leftTime: countDownModel.leftTime, format: 'mm:ss' }"></countdown>
+
+          </span>
+        </span>
+        <ng-content>
+
+        </ng-content>
+      </div>
 
     </mat-sidenav-content>
   </mat-sidenav-container>

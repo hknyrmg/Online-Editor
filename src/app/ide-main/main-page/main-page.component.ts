@@ -12,15 +12,15 @@ import 'ace-builds/src-noconflict/ext-beautify';
 import { ButtonToggleModel, CodeProblemFieldComponent, DialogWindowComponent, DropdownModel } from '@onlineide/components';
 
 import { ProxyManager } from 'projects/onlineide/core/src/lib/Services/proxy-service/proxy-manager.service';
-import { ApiCallsMainPage } from 'src/constants/ApiCalls/MainEditor';
-import { CompilerTestModel, Language, LanguageSpecificProblemDetail, Problem, Problems, SuccededCompile, Themes } from '@onlineide/common';
+import { CompilerTestModel, Language, LanguageSpecificProblemDetail, 
+  Problem, Problems, SuccededCompile, Themes } from '@onlineide/common';
 import { AceEditorConstants } from 'src/constants/AceEditorConstants/ace-constants.model';
-import { CodeProblem, UserAnswer } from 'projects/onlineide/components/src/public-api';
+import { CodeProblem, UserAnswer } from '@onlineide/components';
 import { MatDialog } from '@angular/material/dialog';
-import { LangModes } from 'projects/onlineide/common/src/lib/enums/supported-modes.enum';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CountDownModel, EditorOptions } from '@onlineide/layout';
+import { Modes } from 'projects/onlineide/common/src/lib/enums/supported-modes.enum';
 
-//const THEME = 'ace/theme/monokai';
 @Component({
   selector: 'app-main-page',
   templateUrl: './main-page.component.html',
@@ -30,12 +30,12 @@ export class MainPageComponent implements OnInit {
   @ViewChild('codeEditor2', { static: true }) codeEditorElmRef: ElementRef;
   @ViewChild('codeProblemComp')
   codeProblemComp: CodeProblemFieldComponent;
-
   currentDetail: LanguageSpecificProblemDetail;
-
-
-
+  countDownModel: CountDownModel;
   testResultText: string;
+
+// editor preferences
+editorOptions: EditorOptions = new EditorOptions();
 
   // public currentProblemList: CodeProblem[];
   public currentProblemList: Problems[];
@@ -91,33 +91,35 @@ export class MainPageComponent implements OnInit {
     ace.require('ace/ext/language_tools');
 
     const element = this.codeEditorElmRef.nativeElement;
-    const editorOptions = this.getEditorOptions();
+    const editorOptions = this.getEditorOptions(this.editorOptions);
 
     this.codeEditor = ace.edit(element, editorOptions);
     this.codeEditor.setTheme(AceEditorConstants.AceThemes.DarkTheme);
     this.codeEditor.setShowFoldWidgets(true);
+    
     this.editorBeautify = ace.require('ace/ext/beautify');
 
     this._cdRef.detectChanges();
     this.getRandomQuestion();
 
 
-
+  
   }
 
   private _setAceBasePath() {
     ace.config.set('basePath', 'https://unpkg.com/ace-builds@1.4.12/src-noconflict');
   }
   // missing propery on EditorOptions 'enableBasicAutocompletion' so this is a wolkaround still using ts
-  private getEditorOptions(): Partial<ace.Ace.EditorOptions> & { enableLiveAutocompletion?: boolean; } {
+  private getEditorOptions(editorOptions: EditorOptions): Partial<ace.Ace.EditorOptions> & { enableLiveAutocompletion?: boolean; } {
     const basicEditorOptions: Partial<ace.Ace.EditorOptions> = {
-      highlightActiveLine: true,
+      highlightActiveLine: editorOptions.highlightActiveLine,
       minLines: 14,
       maxLines: Infinity,
+      fontSize: editorOptions.fontSize
     };
 
     const extraEditorOptions = {
-      enableLiveAutocompletion: true,
+      enableLiveAutocompletion: editorOptions.enableLiveAutocompletion,
       enableSnippets: true
     };
     const margedOptions = Object.assign(basicEditorOptions, extraEditorOptions);
@@ -149,15 +151,14 @@ export class MainPageComponent implements OnInit {
   getRandomQuestion() {
     this._proxyService.get(undefined,
       AceEditorConstants.ApiEndPoints.CodingProblem).subscribe((data: any) => {
-        console.log(data);
         this.currentProblemList = data.problems;
-        this._setSampleCode(this.currentProblemList[0].languageSpecificProblemDetails[0]);
-        this._setCurrentAnswerList();
-        this._updateQuestionShown(0);
-        this.updateLanguageDropDown(this.currentProblemList[0].languageSpecificProblemDetails);
         this._updateCurrentDetail(this.currentProblemList[0].languageSpecificProblemDetails[0]);
+        this._setTime();
+        this._setSampleCode(this.currentProblemList[0].languageSpecificProblemDetails[0]);
+        this.updateLanguageDropDown(this.currentProblemList[0].languageSpecificProblemDetails);
         this._updateEditorLangMode(this.currentProblemList[0].languageSpecificProblemDetails[0]);
 
+        this._setCurrentAnswerList();
 
       }, (err: any) => {
         console.log(err);
@@ -165,22 +166,27 @@ export class MainPageComponent implements OnInit {
 
   }
 
+  private _setTime() {
+    let totalTime = this.currentProblemList.length * 900;
+    this.countDownModel = { leftTime: totalTime };
+  }
+
   private _updateEditorLangMode(langSpesificDetail: LanguageSpecificProblemDetail) {
     switch (langSpesificDetail.language_id) {
-      case LangModes.Csharp:
+      case Modes.Csharp:
         this.codeEditor.getSession().setMode(AceEditorConstants.AceLangModes.CSharp);
         break;
-      case LangModes.Java:
+      case Modes.Java:
         this.codeEditor.getSession().setMode(AceEditorConstants.AceLangModes.Java);
 
         break;
-      case LangModes.Ruby:
+      case Modes.Ruby:
         this.codeEditor.getSession().setMode(AceEditorConstants.AceLangModes.Ruby);
         break;
-      case LangModes.Php:
+      case Modes.Php:
         this.codeEditor.getSession().setMode(AceEditorConstants.AceLangModes.PHP);
         break;
-      case LangModes.JavaScript:
+      case Modes.JavaScript:
         this.codeEditor.getSession().setMode(AceEditorConstants.AceLangModes.JavaScript);
         break;
       default:
@@ -196,11 +202,15 @@ export class MainPageComponent implements OnInit {
   private _setCurrentAnswerList() {
     for (let index = 0; index < this.currentProblemList.length; index++) {
       let answer: UserAnswer = new UserAnswer();
-      answer.coding_problem_id = this.currentProblemList[index].problem.id;
+      // answer.language_specific_problem_detail_id = this.currentProblemList[index].problem.id;
+      answer.language_specific_problem_detail_id = this.currentProblemList[index].languageSpecificProblemDetails[0].id;
+
       answer.language_id = this.currentProblemList[index].languageSpecificProblemDetails[0].language_id;
       answer.coding_problem_answer = "";
       this.currentAnswerList.push(answer);
     }
+    this._updateQuestionShown(0);
+
   }
 
   private _setSampleCode(currentProb: LanguageSpecificProblemDetail) {
@@ -209,7 +219,7 @@ export class MainPageComponent implements OnInit {
   }
 
 
-  updateLanguageDropDown(lanGuageDetailList: LanguageSpecificProblemDetail[]) {
+  updateLanguageDropDown(lanGuageDetailList: LanguageSpecificProblemDetail[], langId?: number) {
     let langList: Language[] = [];
     for (let index = 0; index < lanGuageDetailList.length; index++) {
       let language: Language = new Language();
@@ -217,17 +227,24 @@ export class MainPageComponent implements OnInit {
       language.name = lanGuageDetailList[index].language;
       langList.push(language);
     }
-    this._mapDropLanguages(langList);
+    if(langId){
+      this._mapDropLanguages(langList, langId)
+    }
+    else {
+      this._mapDropLanguages(langList)
+    }
+   
 
   }
-  private _mapDropLanguages(languageList: Language[]) {
+  private _mapDropLanguages(languageList: Language[], langId?: number) {
     this.languageModelList = languageList.map(function (langList: Language) {
       let dropdownModel: DropdownModel = new DropdownModel();
       dropdownModel.decription = langList.name;
       dropdownModel.value = langList.id.toString();
       return dropdownModel;
     });
-    this.selectedLangId = this.languageModelList[0].value;
+   this.selectedLangId = langId ? langId.toString() : this.languageModelList[0].value;
+
   }
   themeChanged() {
 
@@ -240,8 +257,11 @@ export class MainPageComponent implements OnInit {
     this._updateEditorLangMode(selectedDetail);
     this._setSampleCode(selectedDetail);
     this._updateCurrentAnswerListLangId(+selectedDetail.language_id);
+    this._updateLangSpesId(selectedDetail.id);
   }
-
+  private _updateLangSpesId(langSpesId: string) {
+    this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].language_specific_problem_detail_id = langSpesId;
+  }
   private _updateCurrentAnswerListLangId(langId: number) {
     this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].language_id = langId;
   }
@@ -285,10 +305,15 @@ export class MainPageComponent implements OnInit {
       this._setCode(this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].coding_problem_answer);
     }
 
-    this.updateLanguageDropDown(this.codeProblemComp.currentQuestion.languageSpecificProblemDetails);
-    this._updateCurrentDetail(this.codeProblemComp.currentQuestion.languageSpecificProblemDetails[0]);
-    this._updateEditorLangMode(this.codeProblemComp.currentQuestion.languageSpecificProblemDetails[0]);
+    this.updateLanguageDropDown(this.codeProblemComp.currentQuestion.languageSpecificProblemDetails,
+      this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].language_id);
 
+
+     let langSpesificDetail: LanguageSpecificProblemDetail;
+     langSpesificDetail = this.codeProblemComp.currentQuestion.languageSpecificProblemDetails.filter(x=> x.id === 
+      this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].language_specific_problem_detail_id)[0];
+    this._updateCurrentDetail(langSpesificDetail);
+    this._updateEditorLangMode(langSpesificDetail);
 
 
   }
@@ -301,16 +326,22 @@ export class MainPageComponent implements OnInit {
     else {
       this._setCode(this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].coding_problem_answer);
     }
-    this.updateLanguageDropDown(this.codeProblemComp.currentQuestion.languageSpecificProblemDetails);
-    this._updateCurrentDetail(this.codeProblemComp.currentQuestion.languageSpecificProblemDetails[0]);
-    this._updateEditorLangMode(this.codeProblemComp.currentQuestion.languageSpecificProblemDetails[0]);
+    this.updateLanguageDropDown(this.codeProblemComp.currentQuestion.languageSpecificProblemDetails,
+      this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].language_id);
+      
+      let langSpesificDetail: LanguageSpecificProblemDetail;
+      langSpesificDetail = this.codeProblemComp.currentQuestion.languageSpecificProblemDetails.filter(x=> x.id === 
+       this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].language_specific_problem_detail_id)[0];
+     this._updateCurrentDetail(langSpesificDetail);
+     this._updateEditorLangMode(langSpesificDetail);
+  }
 
+  updateLangDropSelected(langId: number){
+    this.selectedLangId = langId;
   }
   sendClick() {
     // mevcut cevap kaydi
     this._saveAnswer(this.codeProblemComp.currentQuestionNumber - 1);
-
-
     this.openDialog();
   }
 
@@ -328,7 +359,6 @@ export class MainPageComponent implements OnInit {
   }
 
   testCode() {
-    this._updateRunTestCount();
     let compTestModel: CompilerTestModel = new CompilerTestModel();
     compTestModel.language_specific_problem_detail_id = this.currentDetail.id;
     compTestModel.source_code = this._getCode();
@@ -399,6 +429,9 @@ export class MainPageComponent implements OnInit {
     }, () => {
     });
   }
+  timeFinished(){
+    this.sendAnswers();
+  }
   openResultDialog(message: string): void {
     const dialogRef = this.dialog.open(DialogWindowComponent, {
       width: '350px',
@@ -420,9 +453,7 @@ export class MainPageComponent implements OnInit {
   }
 
 
-  private _updateRunTestCount() {
-    this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].run_test_count += 1;
-  }
+
   private _updatePageLeaveCount() {
     this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].page_leave_count += 1;
   }
@@ -457,6 +488,26 @@ export class MainPageComponent implements OnInit {
     this._snackBar.open(message, action, {
       duration: 7000,
     });
+  }
+
+  editorOptionsChangeEvent(editorOptions: EditorOptions){
+ 
+   // this.codeEditor.setHighlightActiveLine(editorOptions.highlightActiveLine);
+    // this.codeEditor.renderer.setOption('showLineNumbers', editorOptions.showLineNumbers);
+    // this.codeEditor.renderer.setOption('showGutter', editorOptions.showGutter);
+
+    
+    this.codeEditor.setOptions({
+      fontSize: editorOptions.fontSize.toString() + "px",
+      highlightActiveLine: editorOptions.highlightActiveLine,
+      showGutter: editorOptions.showGutter,
+      showLineNumbers: editorOptions.showLineNumbers,
+      showInvisibles: editorOptions.showInvisibles,
+      enableLiveAutocompletion: editorOptions.enableLiveAutocompletion,
+      showPrintMargin: editorOptions.showPrintMargin,
+      foldStyle: editorOptions.foldStyle
+    });
+  
   }
 }
 

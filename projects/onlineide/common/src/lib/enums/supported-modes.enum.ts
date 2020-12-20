@@ -1,8 +1,9 @@
-export enum LangModes {
-    Csharp = 51,
-    Java = 62,
+export enum Modes {
+  
     JavaScript = 2,
     Php= 3,
-    Ruby
+    Ruby=4 ,
+    Csharp = 51,
+    Java = 62
 }
 

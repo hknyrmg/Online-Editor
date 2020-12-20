@@ -15,6 +15,9 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatStepperModule} from '@angular/material/stepper';
 import { CoreModule } from '@onlineide/core';
+import { CountdownModule } from 'ngx-countdown';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import { IdeComponentsModule } from '@onlineide/components';
 
 
 @NgModule({
@@ -30,7 +33,10 @@ import { CoreModule } from '@onlineide/core';
     MatSlideToggleModule,
     MatTooltipModule,
     MatStepperModule,
-    CoreModule
+    CoreModule,
+    CountdownModule,
+    MatCheckboxModule,
+    IdeComponentsModule
   ],
   exports: [MainHeaderComponent, IdeMainPageComponent, MainLeftSidebarComponent]
 })

@@ -38,6 +38,7 @@
     "@angular/router": "^10.1.6",
     "ace-builds": "^1.4.12",
     "bootstrap": "^4.5.3",
+    "ngx-countdown": "^11.0.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
