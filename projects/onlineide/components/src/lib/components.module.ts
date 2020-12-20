@@ -12,16 +12,20 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { DialogWindowComponent } from './dialog-window/dialog-window.component';
 import {MatDialogModule} from '@angular/material/dialog';
+import { BottomSheetComponent } from './bottom-sheet/bottom-sheet.component';
+import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 
 @NgModule({
-  declarations: [DropdownComponent, ButtonToggleComponent, CodeProblemFieldComponent, DialogWindowComponent],
+  declarations: [DropdownComponent, ButtonToggleComponent, CodeProblemFieldComponent, DialogWindowComponent, BottomSheetComponent],
   imports: [CommonModule,
     BrowserModule,
     MatSelectModule,
     MatButtonToggleModule,
     MatButtonModule,
     MatCardModule,
-    MatDialogModule
+    MatDialogModule,
+    MatBottomSheetModule
+
   ],
   exports: [DropdownComponent, ButtonToggleComponent, CodeProblemFieldComponent, DialogWindowComponent]
 })

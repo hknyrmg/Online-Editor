@@ -20,6 +20,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CountDownModel, EditorOptions } from '@onlineide/layout';
 import { Modes } from 'projects/onlineide/common/src/lib/enums/supported-modes.enum';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { BottomSheetComponent, TestResult } from '@onlineide/components';
 
 @Component({
   selector: 'app-main-page',
@@ -53,6 +55,7 @@ editorOptions: EditorOptions = new EditorOptions();
   constructor(private _cdRef: ChangeDetectorRef,
     private _proxyService: ProxyManager,
     private _snackBar: MatSnackBar,
+    private _bottomSheet: MatBottomSheet,
     public dialog: MatDialog) {
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) {
@@ -365,9 +368,20 @@ editorOptions: EditorOptions = new EditorOptions();
     this._proxyService.post(AceEditorConstants.ApiEndPoints.DefaultTests,
       compTestModel
     ).subscribe((data: any) => {
-      this.testResultText = data[0] && data[0].stdout ? `Task ${this.codeProblemComp.currentQuestionNumber.toString()} Compiled Succesfully!` : "An error occurred!";
-      this.openSnackBar(this.testResultText, "OK");
-      if (data[0] && data[0].stdout) {
+      let testResults: TestResult[] = [];
+      for (let index = 0; index < data.length; index++) {
+        let testResult: TestResult = new TestResult();
+        testResult.IsSucceded = data[index] && data[index].stdout ;
+        
+        testResult.ResultText = data[index] && data[index].stdout ?
+       `Test ${index +1} Compiled Succesfully! ` : `An error occurred for test ${index +1}! `;
+       testResults.push(testResult);
+
+    }
+      // this.testResultText = text;
+      // this.openSnackBar(this.testResultText, "OK");
+      this.openBottomSheet(testResults);
+      if (data && data.every(x=> x.stdout)) {
         this.updateSuccededCompileList(compTestModel);
       }
     }, (err: any) => {
@@ -483,10 +497,14 @@ editorOptions: EditorOptions = new EditorOptions();
         break;
     }
   }
-
+  openBottomSheet(testResults: TestResult[]): void {
+    this._bottomSheet.open(BottomSheetComponent, {
+      data: testResults,
+    });
+  }
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action, {
-      duration: 7000,
+      duration: 15000,
     });
   }
 

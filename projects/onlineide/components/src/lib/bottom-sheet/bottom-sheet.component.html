@@ -1,0 +1,17 @@
+<table>
+    <tr *ngFor="let item of data">
+
+        <td>
+            <img class="images" 
+            [src]="item.IsSucceded ? 'assets/img/success-icon.png' : 'assets/img/failed-icon.png'" />
+        </td>
+        <td>
+            <p>{{item.ResultText}}</p>
+        </td>
+    </tr>
+
+</table>
+
+<!-- Copyright 2020 Google LLC. All Rights Reserved.
+    Use of this source code is governed by an MIT-style license that
+    can be found in the LICENSE file at http://angular.io/license -->

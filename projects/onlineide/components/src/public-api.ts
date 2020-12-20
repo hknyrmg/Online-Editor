@@ -12,6 +12,9 @@ export * from './lib/dropdown/dropdown.component'
 export * from './lib/button-toggle/button-toggle.component'
 export * from './lib/code-problem-field/code-problem-field.component'
 export * from './lib/dialog-window/dialog-window.component'
+export * from './lib/bottom-sheet/bottom-sheet.component'
+
+export * from './lib/models/BottomSheetModels/TestResult.model';
 
 export { DropdownModel } from './lib/models/DropdownModels/DropdownModel'
 
