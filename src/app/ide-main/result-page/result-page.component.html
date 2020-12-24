@@ -1,0 +1,25 @@
+<ide-main-page [areIconsVisible]="false">
+
+
+   <!-- survey -->
+   <ng-container *ngIf="modeSurvey">
+      <ide-result-survey (submitSurveyEvent)="submitSurvey($event)" 
+      (skipSurveyEvent)="skipSurvey()">
+   
+      </ide-result-survey>
+   </ng-container>
+   
+
+   <!-- done -->
+
+   <ng-container *ngIf="!modeSurvey">
+      <ide-result-done>
+
+      </ide-result-done>
+   </ng-container>
+
+ 
+</ide-main-page>
+
+
+

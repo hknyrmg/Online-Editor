@@ -20,12 +20,15 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { ResultPageComponent } from './result-page/result-page.component';
 
 
 @NgModule({
   declarations: [
 
-    MainPageComponent],
+    MainPageComponent,
+
+    ResultPageComponent],
   imports: [
     BrowserModule,
     RouterModule,

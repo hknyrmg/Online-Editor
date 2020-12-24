@@ -14,9 +14,12 @@ import { DialogWindowComponent } from './dialog-window/dialog-window.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import { BottomSheetComponent } from './bottom-sheet/bottom-sheet.component';
 import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
+import { ResultSurveyComponent } from './result-survey/result-survey.component';
+import { FormsModule } from '@angular/forms';
+import { ResultDoneComponent } from './result-done/result-done.component';
 
 @NgModule({
-  declarations: [DropdownComponent, ButtonToggleComponent, CodeProblemFieldComponent, DialogWindowComponent, BottomSheetComponent],
+  declarations: [DropdownComponent, ButtonToggleComponent, CodeProblemFieldComponent, DialogWindowComponent, BottomSheetComponent, ResultSurveyComponent, ResultDoneComponent],
   imports: [CommonModule,
     BrowserModule,
     MatSelectModule,
@@ -24,9 +27,11 @@ import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
     MatButtonModule,
     MatCardModule,
     MatDialogModule,
-    MatBottomSheetModule
+    MatBottomSheetModule,
+    FormsModule
 
   ],
-  exports: [DropdownComponent, ButtonToggleComponent, CodeProblemFieldComponent, DialogWindowComponent]
+  exports: [DropdownComponent, ButtonToggleComponent, ResultDoneComponent,
+     CodeProblemFieldComponent, DialogWindowComponent, ResultSurveyComponent]
 })
 export class IdeComponentsModule { }

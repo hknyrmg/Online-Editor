@@ -12,8 +12,10 @@ import 'ace-builds/src-noconflict/ext-beautify';
 import { ButtonToggleModel, CodeProblemFieldComponent, DialogWindowComponent, DropdownModel } from '@onlineide/components';
 
 import { ProxyManager } from 'projects/onlineide/core/src/lib/Services/proxy-service/proxy-manager.service';
-import { CompilerTestModel, Language, LanguageSpecificProblemDetail, 
-  Problem, Problems, SuccededCompile, Themes } from '@onlineide/common';
+import {
+  CompilerTestModel, Language, LanguageSpecificProblemDetail,
+  Problem, Problems, SuccededCompile, Themes
+} from '@onlineide/common';
 import { AceEditorConstants } from 'src/constants/AceEditorConstants/ace-constants.model';
 import { CodeProblem, UserAnswer } from '@onlineide/components';
 import { MatDialog } from '@angular/material/dialog';
@@ -22,6 +24,7 @@ import { CountDownModel, EditorOptions } from '@onlineide/layout';
 import { Modes } from 'projects/onlineide/common/src/lib/enums/supported-modes.enum';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { BottomSheetComponent, TestResult } from '@onlineide/components';
+import { RouteManagerService } from '@onlineide/core';
 
 @Component({
   selector: 'app-main-page',
@@ -36,8 +39,8 @@ export class MainPageComponent implements OnInit {
   countDownModel: CountDownModel;
   testResultText: string;
 
-// editor preferences
-editorOptions: EditorOptions = new EditorOptions();
+  // editor preferences
+  editorOptions: EditorOptions = new EditorOptions();
 
   // public currentProblemList: CodeProblem[];
   public currentProblemList: Problems[];
@@ -56,6 +59,7 @@ editorOptions: EditorOptions = new EditorOptions();
     private _proxyService: ProxyManager,
     private _snackBar: MatSnackBar,
     private _bottomSheet: MatBottomSheet,
+    private _routeManager: RouteManagerService,
     public dialog: MatDialog) {
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) {
@@ -99,14 +103,14 @@ editorOptions: EditorOptions = new EditorOptions();
     this.codeEditor = ace.edit(element, editorOptions);
     this.codeEditor.setTheme(AceEditorConstants.AceThemes.DarkTheme);
     this.codeEditor.setShowFoldWidgets(true);
-    
+
     this.editorBeautify = ace.require('ace/ext/beautify');
 
     this._cdRef.detectChanges();
     this.getRandomQuestion();
 
 
-  
+
   }
 
   private _setAceBasePath() {
@@ -142,6 +146,8 @@ editorOptions: EditorOptions = new EditorOptions();
   private _setCode(code: string) {
     let value = code ? code : "";
     this.codeEditor.setValue(value);
+    this.codeEditor.focus();
+    this.codeEditor.navigateFileEnd();
   }
   runCode() {
     this.textAReaModel = this._getCode();
@@ -230,13 +236,13 @@ editorOptions: EditorOptions = new EditorOptions();
       language.name = lanGuageDetailList[index].language;
       langList.push(language);
     }
-    if(langId){
+    if (langId) {
       this._mapDropLanguages(langList, langId)
     }
     else {
       this._mapDropLanguages(langList)
     }
-   
+
 
   }
   private _mapDropLanguages(languageList: Language[], langId?: number) {
@@ -246,7 +252,7 @@ editorOptions: EditorOptions = new EditorOptions();
       dropdownModel.value = langList.id.toString();
       return dropdownModel;
     });
-   this.selectedLangId = langId ? langId.toString() : this.languageModelList[0].value;
+    this.selectedLangId = langId ? langId.toString() : this.languageModelList[0].value;
 
   }
   themeChanged() {
@@ -312,8 +318,8 @@ editorOptions: EditorOptions = new EditorOptions();
       this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].language_id);
 
 
-     let langSpesificDetail: LanguageSpecificProblemDetail;
-     langSpesificDetail = this.codeProblemComp.currentQuestion.languageSpecificProblemDetails.filter(x=> x.id === 
+    let langSpesificDetail: LanguageSpecificProblemDetail;
+    langSpesificDetail = this.codeProblemComp.currentQuestion.languageSpecificProblemDetails.filter(x => x.id ===
       this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].language_specific_problem_detail_id)[0];
     this._updateCurrentDetail(langSpesificDetail);
     this._updateEditorLangMode(langSpesificDetail);
@@ -331,15 +337,15 @@ editorOptions: EditorOptions = new EditorOptions();
     }
     this.updateLanguageDropDown(this.codeProblemComp.currentQuestion.languageSpecificProblemDetails,
       this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].language_id);
-      
-      let langSpesificDetail: LanguageSpecificProblemDetail;
-      langSpesificDetail = this.codeProblemComp.currentQuestion.languageSpecificProblemDetails.filter(x=> x.id === 
-       this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].language_specific_problem_detail_id)[0];
-     this._updateCurrentDetail(langSpesificDetail);
-     this._updateEditorLangMode(langSpesificDetail);
+
+    let langSpesificDetail: LanguageSpecificProblemDetail;
+    langSpesificDetail = this.codeProblemComp.currentQuestion.languageSpecificProblemDetails.filter(x => x.id ===
+      this.currentAnswerList[this.codeProblemComp.currentQuestionNumber - 1].language_specific_problem_detail_id)[0];
+    this._updateCurrentDetail(langSpesificDetail);
+    this._updateEditorLangMode(langSpesificDetail);
   }
 
-  updateLangDropSelected(langId: number){
+  updateLangDropSelected(langId: number) {
     this.selectedLangId = langId;
   }
   sendClick() {
@@ -371,17 +377,17 @@ editorOptions: EditorOptions = new EditorOptions();
       let testResults: TestResult[] = [];
       for (let index = 0; index < data.length; index++) {
         let testResult: TestResult = new TestResult();
-        testResult.IsSucceded = data[index] && data[index].stdout ;
-        
-        testResult.ResultText = data[index] && data[index].stdout ?
-       `Test ${index +1} Compiled Succesfully! ` : `An error occurred for test ${index +1}! `;
-       testResults.push(testResult);
+        testResult.IsSucceded = data[index] && data[index].stdout;
 
-    }
+        testResult.ResultText = data[index] && data[index].stdout ?
+          `Test ${index + 1} Compiled Succesfully! ` : `An error occurred for test ${index + 1}! `;
+        testResults.push(testResult);
+
+      }
       // this.testResultText = text;
       // this.openSnackBar(this.testResultText, "OK");
       this.openBottomSheet(testResults);
-      if (data && data.every(x=> x.stdout)) {
+      if (data && data.every(x => x.stdout)) {
         this.updateSuccededCompileList(compTestModel);
       }
     }, (err: any) => {
@@ -433,8 +439,10 @@ editorOptions: EditorOptions = new EditorOptions();
       this.currentAnswerList
     ).subscribe((data: any) => {
 
-      console.log(data);
-      this.openResultDialog("Congrulations! Your answers has been sent.");
+      // console.log(data);
+      // this.openResultDialog("Congrulations! Your answers has been sent.");
+      this._routeManager.redirect("result");
+
     }, (err: any) => {
 
       console.log(err);
@@ -443,7 +451,7 @@ editorOptions: EditorOptions = new EditorOptions();
     }, () => {
     });
   }
-  timeFinished(){
+  timeFinished() {
     this.sendAnswers();
   }
   openResultDialog(message: string): void {
@@ -508,13 +516,11 @@ editorOptions: EditorOptions = new EditorOptions();
     });
   }
 
-  editorOptionsChangeEvent(editorOptions: EditorOptions){
- 
-   // this.codeEditor.setHighlightActiveLine(editorOptions.highlightActiveLine);
-    // this.codeEditor.renderer.setOption('showLineNumbers', editorOptions.showLineNumbers);
-    // this.codeEditor.renderer.setOption('showGutter', editorOptions.showGutter);
+  editorOptionsChangeEvent(editorOptions: EditorOptions) {
 
-    
+
+    this.codeEditor.setKeyboardHandler("ace/keyboard/" + editorOptions.keybinding);
+
     this.codeEditor.setOptions({
       fontSize: editorOptions.fontSize.toString() + "px",
       highlightActiveLine: editorOptions.highlightActiveLine,
@@ -523,9 +529,11 @@ editorOptions: EditorOptions = new EditorOptions();
       showInvisibles: editorOptions.showInvisibles,
       enableLiveAutocompletion: editorOptions.enableLiveAutocompletion,
       showPrintMargin: editorOptions.showPrintMargin,
-      foldStyle: editorOptions.foldStyle
+      foldStyle: editorOptions.foldStyle,
+      wrap: editorOptions.wrap === "true/'free'" ? editorOptions.printMarginColumn : editorOptions.wrap,
+      printMarginColumn: editorOptions.printMarginColumn
     });
-  
+
   }
 }
 

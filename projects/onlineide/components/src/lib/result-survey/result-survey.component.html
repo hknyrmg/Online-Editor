@@ -1,0 +1,61 @@
+<div class="container h-100 mt-4 mb-50">
+    <div class="row mb-4 justify-content-center mx-4">
+
+        <mat-card class="example-card">
+            <mat-card-header>
+                <div mat-card-avatar class="example-header-image"></div>
+                <mat-card-title>Test submitted succesfully</mat-card-title>
+                <mat-card-subtitle>Congrulations !!!</mat-card-subtitle>
+            </mat-card-header>
+            <!-- <img mat-card-image src="https://cdn4.iconfinder.com/data/icons/success-filloutline/64/success-goal-finance-achievement-mountains-128.png" alt="Photo of a Shiba Inu"> -->
+            <mat-card-content>
+                <p>
+                    The OBSS will take your answers.
+                    The OBSS will take your answers.
+                    The OBSS will take your answers.
+                </p>
+                <table>
+                    <tr>
+
+                        <td>
+                            <h1>
+                                How was your overall experience?
+                            </h1>
+                        </td>
+
+                    </tr>
+                    <tr>
+
+                        <td>
+                            <div class="rate">
+                                <input type="radio" [(ngModel)]="starRate" id="star5" name="rate" value="5" />
+                                <label for="star5" title="text">5 stars</label>
+                                <input type="radio" [(ngModel)]="starRate" id="star4" name="rate" value="4" />
+                                <label for="star4" title="text">4 stars</label>
+                                <input type="radio" [(ngModel)]="starRate" id="star3" name="rate" value="3" />
+                                <label for="star3" title="text">3 stars</label>
+                                <input type="radio" [(ngModel)]="starRate" id="star2" name="rate" value="2" />
+                                <label for="star2" title="text">2 stars</label>
+                                <input type="radio" [(ngModel)]="starRate" id="star1" name="rate" value="1" />
+                                <label for="star1" title="text">1 star</label>
+                            </div>
+                        </td>
+
+                    </tr>
+
+                </table>
+
+
+                <h2>
+                    What can we do to improve your experience?
+                                </h2>
+                <textarea [(ngModel)]="comment" matInput placeholder="Leave a suggestion"></textarea>
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-raised-button type="submit" (click)="submitSurvey()" color="primary">SUBMIT</button>
+
+                <button (click)="skipSurvey()" mat-button>Skip</button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+</div>

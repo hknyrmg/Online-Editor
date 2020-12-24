@@ -15,10 +15,14 @@ export * from './lib/dialog-window/dialog-window.component'
 export * from './lib/bottom-sheet/bottom-sheet.component'
 
 export * from './lib/models/BottomSheetModels/TestResult.model';
+export * from './lib/result-survey/result-survey.component';
 
-export { DropdownModel } from './lib/models/DropdownModels/DropdownModel'
+export * from './lib/result-done/result-done.component';
 
-export { CodeProblem } from './lib/models/CodeProblemModels/CodeProblem'
+export { DropdownModel } from './lib/models/DropdownModels/DropdownModel';
 
-export { DialogModel} from './lib/models/DialogModels/DialogModel'
-export { UserAnswer } from './lib/models/CodeProblemModels/UserAnswer'
+export { CodeProblem } from './lib/models/CodeProblemModels/CodeProblem';
+
+export { DialogModel } from './lib/models/DialogModels/DialogModel';
+export { UserAnswer } from './lib/models/CodeProblemModels/UserAnswer';
+export { SurveyResult } from './lib/models/SurveyModels/SurveyResult.model'

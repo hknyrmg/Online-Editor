@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
-import { DropdownModel } from '@onlineide/components';
+import { ButtonToggleModel, DropdownModel } from '@onlineide/components';
 import { EditorOptions } from '../../EditorModels/editor-options.model';
 import { CountDownModel } from './countdown.model';
 import { SideNavToggleType } from './sidenav-toggle-type.enum';
@@ -17,6 +17,7 @@ export class IdeMainPageComponent implements OnInit {
   @Output() timeFinished = new EventEmitter<any>();
   @Output() editorOptionsChangeEvent = new EventEmitter<EditorOptions>();
 
+  @Input() areIconsVisible: Boolean = true;
   public isMobileDevice: Boolean = false;
   SideNavType: typeof SideNavType = SideNavType;
   opened: boolean;
@@ -32,6 +33,20 @@ export class IdeMainPageComponent implements OnInit {
 
 
   ];
+
+  dropKeyBindingList: DropdownModel[] = [
+    {value: "vscode", decription: "VSCode"},
+    {value: "vim", decription: "Vim"},
+    {value: "emacs", decription: "Emacs"}
+  ];
+
+    //softWrapModelList
+    public softWrapModelList: ButtonToggleModel[] = [
+      { value: "false/'off'", buttonText: "Off" },
+      { value: "true/'free'", buttonText: "Margin" },
+      { value: "40", buttonText: "40" }
+    ];
+
   // editor preferences
 editorOptions: EditorOptions = new EditorOptions();
 
@@ -94,4 +109,20 @@ editorOptions: EditorOptions = new EditorOptions();
     this.editorOptions.foldStyle = event.value;
     this.editorOptionsChangeEvent.emit(this.editorOptions);
   }
+
+  dropKeyBindingChanged(event){
+    this.editorOptions.keybinding = event.value;
+    this.editorOptionsChangeEvent.emit(this.editorOptions);
+  }
+  
+  wrapChanged(event){
+    
+    this.editorOptions.wrap =  event.value;
+    this.editorOptionsChangeEvent.emit(this.editorOptions);
+  }
+  printMarginColumnChanged(event){
+    this.editorOptions.printMarginColumn = event.target.value;
+    this.editorOptionsChangeEvent.emit(this.editorOptions);
+  }
+  
 }

@@ -1,0 +1,71 @@
+
+   @media only screen and (max-width:400px) {
+    .example-card {
+        /* max-width: 400px; */
+          max-width: 100%;
+      
+      }
+  }
+  @media only screen and (max-width: 800px) {
+    .example-card {
+        /* max-width: 400px; */
+          max-width: 80%;
+      
+      }
+  }
+  
+  
+  
+  @media only screen and (min-width: 1001px) {
+    .example-card {
+        /* max-width: 400px; */
+          max-width: 50%;
+      
+      }
+  }
+
+
+  .example-header-image {
+    background-image: url('https://cdn2.iconfinder.com/data/icons/basic-ui-elements-16/117/correct-256.png');
+    background-size: cover;
+  }
+
+  .rate {
+      float: left;
+      height: 46px;
+      padding: 0 10px;
+  }
+  .rate:not(:checked) > input {
+      position:absolute;
+      top:-9999px;
+  }
+  .rate:not(:checked) > label {
+      float:right;
+      width:1em;
+      overflow:hidden;
+      white-space:nowrap;
+      cursor:pointer;
+      font-size:30px;
+      color:#ccc;
+  }
+  .rate:not(:checked) > label:before {
+      content: '★ ';
+  }
+  .rate > input:checked ~ label {
+      color: #ffc700;    
+  }
+  .rate:not(:checked) > label:hover,
+  .rate:not(:checked) > label:hover ~ label {
+      color: #deb217;  
+  }
+  .rate > input:checked + label:hover,
+  .rate > input:checked + label:hover ~ label,
+  .rate > input:checked ~ label:hover,
+  .rate > input:checked ~ label:hover ~ label,
+  .rate > label:hover ~ input:checked ~ label {
+      color: #c59b08;
+  }
+  
+  textarea{
+      width: 75%;
+  }

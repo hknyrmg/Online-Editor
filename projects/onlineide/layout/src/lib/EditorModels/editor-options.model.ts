@@ -1,6 +1,6 @@
 import { FoldStyle } from "./fold-style.enum";
 
-export class EditorOptions{
+export class EditorOptions {
     fontSize: number = 12;
     enableLiveAutocompletion: boolean = true;
     highlightActiveLine: boolean = true;
@@ -9,5 +9,9 @@ export class EditorOptions{
     showInvisibles: boolean = false;
     showPrintMargin: boolean = true;
     foldStyle: string = "markbegin";
+    keybinding: string = "vscode";
+    wrap: string = "false/'off'";
+    wrap2: string = "false/'off'";
 
+    printMarginColumn: number = 80;
 }

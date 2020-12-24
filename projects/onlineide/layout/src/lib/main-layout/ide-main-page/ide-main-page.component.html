@@ -10,7 +10,11 @@
       </h1>
     </a>
 
+    <!-- // Iconlar resultta gorunmemeli -->
     <span class="navbar-spacer"></span>
+
+    <ng-container *ngIf="areIconsVisible">
+    
     <mat-slide-toggle #slideToggle class="mr5" color="warn" (toggleChange)="toggleChange(!slideToggle.checked)"
       [matTooltip]="slideToggle.checked ? 'Switch to dark theme' : 'Switch to light theme'">
       <mat-icon *ngIf="!slideToggle.checked" [ngStyle]="{'color':'yellow'}" aria-hidden="false"
@@ -24,13 +28,16 @@
 
     </mat-slide-toggle>
     <button changeClass="rotate-settings" (click)="startSideNavClick(SideNavType.side)" mat-icon-button
+    matTooltip="Open Settings"
       aria-label="Example icon button with a vertical three dot icon">
       <mat-icon>settings</mat-icon>
     </button>
     <button changeClass="flicker" (click)="sidenav2.toggle()" mat-icon-button
+    matTooltip="Help"
       aria-label="Example icon button with a vertical three dot icon">
       <mat-icon>help</mat-icon>
     </button>
+  </ng-container>
   </mat-toolbar>
   <mat-sidenav-container class="navbar-sidenav-container">
 
@@ -111,6 +118,25 @@
               </td>
             </tr>
             <tr>
+              <td>
+                <ide-dropdown [selectedValue]="editorOptions.keybinding" dropDownTitle="Keybinding"
+                [dropDataList]="dropKeyBindingList" (dropChangedEvent)="dropKeyBindingChanged($event)">
+            </ide-dropdown>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <p>
+                  Soft Wrap
+                <ide-button-toggle [selectedValue]="editorOptions.wrap" 
+                [buttonToggleList]="softWrapModelList"
+                (buttonChangedEvent)="wrapChanged($event)">
+            </ide-button-toggle>
+          </p>
+
+              </td>
+            </tr>
+            <tr>
 
               <td>
                   <mat-checkbox
@@ -154,12 +180,22 @@
               </td>
             </tr>
             <tr>
+
+              <td>
+                <label for="fontSize">Print Margin Index&nbsp;</label>
+                <input matInput type="number" id="printMarginColumn" min="20" max="200"
+                 [value]="editorOptions.printMarginColumn"  (change)="printMarginColumnChanged($event)">
+
+              </td>
+            </tr>
+            <tr>
               <td>
                 <ide-dropdown [selectedValue]="editorOptions.foldStyle" dropDownTitle="Folding Style"
                 [dropDataList]="dropFoldList" (dropChangedEvent)="dropFoldChanged($event)">
             </ide-dropdown>
               </td>
             </tr>
+
           </table>
 
           
@@ -184,12 +220,25 @@
             <li>
               <p>Timer shows the remaining time for all tasks.</p>
             </li>
-            <li>
-              <p>15 minutes is given for every task.</p>
-            </li>
+           
             <li>
               <p>At the end of the time, your answers will be submitted.</p>
             </li>
+          </ol>
+
+        </mat-step>
+        <mat-step>
+          <ng-template matStepLabel>Settings</ng-template>
+          <img class="images" src="assets/img/settings-icon.PNG" />
+
+          <ol>
+            <li>
+              <p>You should update IDE settings according to your preferences.</p>
+            </li>
+            <li>
+              <p>Clicking the settings icon, opens the settings on the left side.</p>
+            </li>
+           
           </ol>
 
         </mat-step>

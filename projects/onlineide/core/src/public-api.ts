@@ -13,3 +13,5 @@ export {ProxyManager} from './lib/Services/proxy-service/proxy-manager.service';
 
 export {LoaderService} from './lib/Services/loader-service/loader.service';
 export {ChangeClassDirective} from './lib/Directives/change-class.directive';
+
+export {RouteManagerService} from './lib/Services/router-service/route-manager.service'
