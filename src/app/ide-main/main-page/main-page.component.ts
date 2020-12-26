@@ -25,6 +25,7 @@ import { Modes } from 'projects/onlineide/common/src/lib/enums/supported-modes.e
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { BottomSheetComponent, TestResult } from '@onlineide/components';
 import { RouteManagerService } from '@onlineide/core';
+import { stdout } from 'process';
 
 @Component({
   selector: 'app-main-page',
@@ -390,7 +391,7 @@ export class MainPageComponent implements OnInit {
       // this.testResultText = text;
       // this.openSnackBar(this.testResultText, "OK");
       this.openBottomSheet(testResults);
-      if (data && data.every(x => x.stdout)) {
+      if (data && data.every(x => x.stdout &&  x.stdout === "true" )) {
         this.updateSuccededCompileList(compTestModel);
       }
     }, (err: any) => {
