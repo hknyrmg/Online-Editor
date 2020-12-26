@@ -391,7 +391,7 @@ export class MainPageComponent implements OnInit {
       // this.testResultText = text;
       // this.openSnackBar(this.testResultText, "OK");
       this.openBottomSheet(testResults);
-      if (data && data.every(x => x.stdout &&  x.stdout === "true" )) {
+      if (data && data.every(x => x.stdout &&  x.stdout.toLowerCase() === "true" )) {
         this.updateSuccededCompileList(compTestModel);
       }
     }, (err: any) => {
