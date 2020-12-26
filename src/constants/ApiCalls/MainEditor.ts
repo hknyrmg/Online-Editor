@@ -1,9 +1,8 @@
 export class ApiCallsMainPage{
     static MainEditorPage ={
-        Controller: "customer",
-        Actions: {
-            Add: "add"
-        }
+        Editor: "editor",
+        Result: "result"
+      
     }
     static MainEditorPageLanguage ={
         Controller: "language",

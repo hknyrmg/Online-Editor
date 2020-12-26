@@ -4,6 +4,7 @@ export enum Modes {
     Php= 68,
     Ruby= 72,
     Csharp = 51,
-    Java = 62
+    Java = 62,
+    TypeScript = 74
 }
 

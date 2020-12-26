@@ -198,6 +198,9 @@ export class MainPageComponent implements OnInit {
       case Modes.JavaScript:
         this.codeEditor.getSession().setMode(AceEditorConstants.AceLangModes.JavaScript);
         break;
+        case Modes.TypeScript:
+          this.codeEditor.getSession().setMode(AceEditorConstants.AceLangModes.TypeScript);
+          break;
       default:
         this.codeEditor.getSession().setMode(AceEditorConstants.AceLangModes.JavaScript);
 

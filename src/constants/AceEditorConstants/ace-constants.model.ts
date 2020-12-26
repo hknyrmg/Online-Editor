@@ -11,6 +11,7 @@ export class AceEditorConstants {
         CSharp: "ace/mode/csharp",
         Java: "ace/mode/java",
         JavaScript: "ace/mode/javascript",
+        TypeScript: "ace/mode/typescript",
         PHP: "ace/mode/php",
         Ruby: "ace/mode/ruby"
     }
