@@ -154,7 +154,7 @@ export class MainPageComponent implements OnInit {
     this.textAReaModel = this._getCode();
   }
   clearCode() {
-    this.codeEditor.setValue(undefined);
+    this.codeEditor.setValue("");
   }
 
 
