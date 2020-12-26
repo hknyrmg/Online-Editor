@@ -380,9 +380,9 @@ export class MainPageComponent implements OnInit {
       let testResults: TestResult[] = [];
       for (let index = 0; index < data.length; index++) {
         let testResult: TestResult = new TestResult();
-        testResult.IsSucceded = data[index] && data[index].stdout;
+        testResult.IsSucceded = data[index] && data[index].stdout &&  data[index].stdout.toLowerCase() === "true";
 
-        testResult.ResultText = data[index] && data[index].stdout ?
+        testResult.ResultText = data[index] && data[index].stdout && data[index].stdout.toLowerCase() === "true" ?
           `Test ${index + 1} Compiled Succesfully! ` : `An error occurred for test ${index + 1}! `;
         testResults.push(testResult);
 
