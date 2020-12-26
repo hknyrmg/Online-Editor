@@ -9,7 +9,7 @@ import 'ace-builds/src-noconflict/ext-language_tools';
 
 // beautify
 import 'ace-builds/src-noconflict/ext-beautify';
-import { ButtonToggleModel, CodeProblemFieldComponent, DialogWindowComponent, DropdownModel } from '@onlineide/components';
+import { ButtonToggleModel, CodeProblemFieldComponent, DialogWindowComponent, DropdownModel, solutions } from '@onlineide/components';
 
 import { ProxyManager } from 'projects/onlineide/core/src/lib/Services/proxy-service/proxy-manager.service';
 import {
@@ -438,8 +438,11 @@ export class MainPageComponent implements OnInit {
     return false;
   }
   sendAnswers() {
+    let solutions1: solutions = new solutions();
+    solutions1.UserAnswerList = this.currentAnswerList;
+    
     this._proxyService.post(AceEditorConstants.ApiEndPoints.SubmitEndPoint,
-      this.currentAnswerList
+      solutions1
     ).subscribe((data: any) => {
 
       // console.log(data);

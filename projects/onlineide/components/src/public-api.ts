@@ -25,4 +25,6 @@ export { CodeProblem } from './lib/models/CodeProblemModels/CodeProblem';
 
 export { DialogModel } from './lib/models/DialogModels/DialogModel';
 export { UserAnswer } from './lib/models/CodeProblemModels/UserAnswer';
+export { solutions } from './lib/models/CodeProblemModels/Solutions.model';
+
 export { SurveyResult } from './lib/models/SurveyModels/SurveyResult.model'
