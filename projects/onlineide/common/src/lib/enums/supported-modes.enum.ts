@@ -1,8 +1,8 @@
 export enum Modes {
   
-    JavaScript = 2,
-    Php= 3,
-    Ruby=4 ,
+    JavaScript = 63,
+    Php= 68,
+    Ruby= 72,
     Csharp = 51,
     Java = 62
 }
